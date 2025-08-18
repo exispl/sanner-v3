@@ -24,6 +24,8 @@
     body{margin:0;background:linear-gradient(180deg,var(--panel),var(--panel2));color:var(--text);font:17px/1.45 system-ui,Segoe UI,Roboto,Arial,sans-serif; transition: background .3s, color .3s;}
     .wrap{max-width:1200px;margin:auto;padding:12px 16px}
     .panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+    header .panel { opacity: 0.25; transition: opacity .3s ease-in-out; }
+    header .panel:hover { opacity: 1; }
     .head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
     .body{padding:10px 14px}
     .badge{font-size:12px;color:#cbd5e1;background:#0b1220;padding:4px 8px;border-radius:999px;border:1px solid var(--line)}
@@ -35,6 +37,9 @@
     .machine .title{display:flex;align-items:center;gap:10px}
     .machine .title h2{margin:0;font-size:26px;letter-spacing:.3px}
     .meta{color:var(--muted);font-size:12px;margin:6px 0}
+    .model-color-dot { width: 29px !important; height: 34px !important; border-radius: 6px !important; }
+    .completion-time-container { font-size: 0.8rem; }
+    .completion-time-container .completion-badge { font-size: 0.8rem; padding: 4px 8px; }
     .progress{margin-top:6px;height:18px;border:1px solid var(--line);border-radius:12px;background:#0b1220;position:relative;overflow:hidden}
     .progress .bar{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,#22c55e,#86efac);transition:width .25s ease}
     .progress .label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px}
@@ -254,6 +259,18 @@
     </div>
   </div>
 
+  <div id="swapMachineModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-30">
+    <div class="panel w-full max-w-lg">
+      <div class="head">
+        <h2 class="m-0">Wybierz maszynę do zamiany</h2>
+        <button id="closeSwapModalBtn" class="btn ghost">✖</button>
+      </div>
+      <div id="swapMachineList" class="body grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+        <!-- Machine buttons will be injected here -->
+      </div>
+    </div>
+  </div>
+
   <footer class="wrap" id="adminFooter" style="display: none;">
     <div class="panel mt-3">
       <div class="head">
@@ -273,8 +290,8 @@
     <article class="panel machine">
       <div class="head">
         <div class="title"><span>🤖</span><h2 class="code"></h2></div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs opacity-70">Przewidywany czas do końca:</span>
+        <div class="flex items-center gap-2 completion-time-container">
+          <span class="opacity-70">Przewidywany czas do końca:</span>
           <div class="completion-badge role-badge bg-gray-500 text-white">--:--</div>
           <button class="btn ghost settings-toggle">⚙️</button>
         </div>
@@ -295,7 +312,7 @@
             <div class="flex items-center gap-2">
                 <span data-translate-key="model">Model:</span>
                 <strong class="mdl-val font-bold text-base">—</strong>
-                <span class="w-6 h-6 rounded-full bg-white/50 border-2 border-white/20 model-color-dot ml-auto" title="Zmień kolor"></span>
+                <span class="bg-white/50 border-2 border-white/20 model-color-dot ml-auto" title="Zmień kolor"></span>
             </div>
           </div>
           <div class="border border-white/10 rounded-lg p-2">
@@ -639,10 +656,19 @@
     }
 
     let activeMachineForColor = null;
+    let machineToSwap = null;
     class Machine{ constructor(container,data,orders){ this.root=$('#tpl-machine').content.firstElementChild.cloneNode(true);
         this.data = data;
         this.orders = orders;
-        this.code=data.code; $('.code',this.root).textContent=this.code;
+        this.code=data.code;
+        this.codeEl = $('.code',this.root);
+        this.codeEl.textContent = this.code;
+        this.codeEl.style.cursor = 'pointer';
+        this.codeEl.title = 'Kliknij, aby zamienić maszynę';
+        this.codeEl.addEventListener('click', () => {
+            openSwapModal(this);
+        });
+
 
         if (!this.data.completionTimestamp) {
           this.data.completionTimestamp = Date.now() + (Math.floor(Math.random() * 14940) + 60) * 1000;
@@ -714,6 +740,10 @@
             this.cartons.setCurrentCarton(parseInt(value, 10));
         }
 
+        if (key === 'model' && String(value).includes('201044')) {
+            this.data.color = '#ffffff';
+        }
+
         input.blur();
         this.render();
         persist();
@@ -724,7 +754,10 @@
         $('.auf-val',this.root).textContent = order.auftrag || '—';
         $('.mdl-val',this.root).textContent = order.model || '—';
         $('.period-val',this.root).textContent = order.period || '—';
-        $('.nextauf-val',this.root).textContent = order.next || '—';
+
+        const nextAufVal = order.next || '—';
+        const nextReadyCheck = order.nextReady ? ' <span class="text-green-400">✔️</span>' : '';
+        $('.nextauf-val',this.root).innerHTML = nextAufVal + nextReadyCheck;
 
         this.dot.style.backgroundColor = this.data.color || '#94a3b8';
 
@@ -764,19 +797,20 @@
         const fifteenHours = 15 * 3600;
         const eightHours = 8 * 3600;
         const twoHours = 2 * 3600;
-        const oneHour = 1 * 3600;
-
-        let badgeColorClass = 'bg-gray-500'; // > 15h
-        if (timeLeft <= fifteenHours && timeLeft > eightHours) {
-            badgeColorClass = 'bg-yellow-500'; // 8-15h
-        } else if (timeLeft <= eightHours && timeLeft > twoHours) {
-            badgeColorClass = 'bg-orange-500'; // 2-8h
-        } else if (timeLeft <= twoHours && timeLeft > 0) {
-            badgeColorClass = 'bg-red-600'; // < 2h
-        }
 
         this.completionBadgeEl.className = 'completion-badge role-badge text-white'; // Reset classes
-        this.completionBadgeEl.classList.add(badgeColorClass);
+
+        if (timeLeft <= 0) {
+            this.completionBadgeEl.classList.add('bg-yellow-400', 'text-black', 'font-bold');
+        } else if (timeLeft <= twoHours) {
+            this.completionBadgeEl.classList.add('bg-red-600');
+        } else if (timeLeft <= eightHours) {
+            this.completionBadgeEl.classList.add('bg-orange-500');
+        } else if (timeLeft <= fifteenHours) {
+            this.completionBadgeEl.classList.add('bg-yellow-500');
+        } else {
+            this.completionBadgeEl.classList.add('bg-gray-500');
+        }
 
         // Urgent notification logic
         if (timeLeft > 0 && timeLeft < twoHours) {
@@ -1339,7 +1373,52 @@
         newCancelBtn.onclick = () => close(false);
     }
 
-    function init(){ initThemeSwitcher(); initLangSwitcher(); initMachines(); initLogin(); initNotesPlans(); initUserDetailsModal(); renderAdminPanel(); initCustomTimeModal(); }
+    function swapMachine(newMachineData) {
+        if (!machineToSwap) return;
+        const indexToReplace = CFG.machines.findIndex(m => m.code === machineToSwap.code);
+        if (indexToReplace !== -1) {
+            CFG.machines[indexToReplace] = JSON.parse(JSON.stringify(DEFAULTS.machines.find(m => m.code === newMachineData.code)));
+            persist();
+            renderMachines();
+        }
+    }
+
+    function openSwapModal(machineInstance) {
+        const modal = $('#swapMachineModal');
+        const list = $('#swapMachineList');
+        machineToSwap = machineInstance;
+        list.innerHTML = '';
+
+        const displayedMachineCodes = CFG.machines.map(m => m.code);
+        const availableMachines = DEFAULTS.machines.filter(m => !displayedMachineCodes.includes(m.code));
+
+        if (availableMachines.length === 0) {
+            list.innerHTML = '<p class="col-span-full text-center opacity-70">Brak maszyn do zamiany.</p>';
+        } else {
+            availableMachines.forEach(machineData => {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.textContent = machineData.code;
+                btn.onclick = () => {
+                    swapMachine(machineData);
+                    $('#closeSwapModalBtn').click();
+                };
+                list.appendChild(btn);
+            });
+        }
+        modal.classList.remove('hidden');
+    }
+
+    function initSwapMachineModal() {
+        const modal = $('#swapMachineModal');
+        const closeBtn = $('#closeSwapModalBtn');
+        closeBtn.onclick = () => {
+            modal.classList.add('hidden');
+            machineToSwap = null;
+        };
+    }
+
+    function init(){ initThemeSwitcher(); initLangSwitcher(); initMachines(); initLogin(); initNotesPlans(); initUserDetailsModal(); renderAdminPanel(); initCustomTimeModal(); initSwapMachineModal(); }
     init();
   </script>
 </body>
