@@ -1038,7 +1038,21 @@
       return { auftrag:'1012'+rnd, model:'DASG-1 (201044)', period:`od ${F(s)} do ${F(e)}`, next:'' };
     }
 
-    function renderMachines(){ const box=$('#machines'); box.innerHTML=''; (CFG.machines||[]).forEach(m=> new Machine(box,m, CFG.orders||{})); }
+    function renderMachines(){
+        const box=$('#machines');
+        box.innerHTML='';
+        (CFG.machines||[]).forEach(m=> {
+            try {
+                new Machine(box,m, CFG.orders||{});
+            } catch (e) {
+                console.error("Failed to render machine:", m.code, e);
+                const errorEl = document.createElement('div');
+                errorEl.className = 'panel machine';
+                errorEl.innerHTML = `<div class="head"><h2>Error loading machine: ${m.code}</h2></div><div class="body"><pre>${e.stack}</pre></div>`;
+                box.appendChild(errorEl);
+            }
+        });
+    }
 
     // --- stamps
     function makeStamp(ts,user,smaller=false){
@@ -1495,6 +1509,7 @@
                 activeTimeSetterCallback(input.value);
             }
             close();
+            return false; // Extra precaution
         });
         closeBtn.onclick = close;
     }
