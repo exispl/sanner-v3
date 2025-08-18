@@ -412,6 +412,7 @@
     const NOTES_KEY='KN007_NOTES';
     const PLANS_KEY='KN007_PLANS';
     const SHARED_CFG_KEY = 'KN_SHARED_CFG_V1';
+    const LOCAL_CFG_KEY = 'KN007_LOCAL_CFG_V1';
     const ADMIN_PASS = 4753; // kod 0..1000 wymagany do publikacji SoG1917
 
     const TRANSLATIONS = {
@@ -480,27 +481,27 @@
         'MA820054': { model: 'DASG-1 (201044)' }
       },
     };
-    let CFG=JSON.parse(localStorage.getItem('KN007_CFG')||'null')||DEFAULTS;
-    // ensure USERS is up to date
-    if (CFG.users) { USERS = CFG.users; } else { CFG.users = USERS; }
-    // Data integrity check for machines
-    if (!CFG.machines || !Array.isArray(CFG.machines) || CFG.machines.length < 8) {
-        console.log('Incomplete machine data detected. Restoring defaults.');
-        CFG.machines = DEFAULTS.machines;
-        persist();
-    }
+    let CFG = {}; // Global config object, to be populated asynchronously
 
     const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
     const isAdmin=()=> CFG.user?.uid==='SoG1917';
     let persistDebounceTimer;
-    function persist(){
-        localStorage.setItem('KN007_CFG', JSON.stringify(CFG));
+    function persistLocalSettings() {
+        const localCfg = {
+            user: CFG.user,
+            theme: CFG.theme,
+        };
+        localStorage.setItem(LOCAL_CFG_KEY, JSON.stringify(localCfg));
+    }
 
+    function persist(){
         clearTimeout(persistDebounceTimer);
         persistDebounceTimer = setTimeout(() => {
-            CFG.lastUpdate = Date.now();
-            saveShared(SHARED_CFG_KEY, CFG);
-            // console.log('Persisted to server');
+            const sharedData = { ...CFG };
+            delete sharedData.user;
+            delete sharedData.theme;
+            sharedData.lastUpdate = Date.now();
+            saveShared(SHARED_CFG_KEY, sharedData);
         }, 1000);
     }
     function setStatus(t){ $('#statusLine').textContent='Status: '+t; }
@@ -1218,7 +1219,7 @@
 
         logLogin(selectedValue);
         CFG.user.uid = selectedValue;
-        persist();
+        persistLocalSettings(); // Save user change locally
 
         const newCurrentUser = USERS[selectedValue];
         if (newCurrentUser && !newCurrentUser.details_filled) {
@@ -1347,12 +1348,12 @@
       function applyTheme(theme) {
         body.dataset.theme = theme;
         CFG.theme = theme;
-        persist();
+        persistLocalSettings();
       }
 
       // Apply saved theme on load
       if (CFG.theme) {
-        applyTheme(CFG.theme);
+        body.dataset.theme = CFG.theme;
       }
 
       themeButtons.forEach(button => {
@@ -1827,8 +1828,49 @@
         }
     }
 
-    function init(){ initThemeSwitcher(); initLangSwitcher(); initMachines(); initLogin(); initNotesPlans(); initUserDetailsModal(); renderAdminPanel(); initCustomTimeModal(); initSwapMachineModal(); initSettings(); }
-    init();
+    async function main() {
+        const sharedCfg = await loadShared(SHARED_CFG_KEY);
+        const localCfg = JSON.parse(localStorage.getItem(LOCAL_CFG_KEY) || '{}');
+
+        if (sharedCfg) {
+            CFG = sharedCfg;
+        } else {
+            console.log('No shared config found in DB, using DEFAULTS.');
+            CFG = JSON.parse(JSON.stringify(DEFAULTS)); // Deep copy
+        }
+
+        // Restore local user-specific settings
+        CFG.user = localCfg.user || DEFAULTS.user;
+        CFG.theme = localCfg.theme || 'dark';
+
+        // Data integrity check - still useful for first run or corrupted DB data
+        if (!CFG.machines || !Array.isArray(CFG.machines) || CFG.machines.length < 8) {
+            console.log('Incomplete machine data detected. Restoring defaults.');
+            CFG.machines = DEFAULTS.machines;
+        }
+
+        // Set USERS from the loaded config, or defaults if not present
+        if (CFG.users) { USERS = CFG.users; } else { CFG.users = USERS; }
+
+        // Start all initialization functions that depend on CFG
+        initThemeSwitcher();
+        initLangSwitcher();
+        initMachines();
+        initLogin();
+        initNotesPlans();
+        initUserDetailsModal();
+        renderAdminPanel();
+        initCustomTimeModal();
+        initSwapMachineModal();
+        initSettings();
+
+        // Initial save to establish DB state if it was empty
+        if (!sharedCfg) {
+            persist();
+        }
+    }
+
+    main();
   </script>
 </body>
 </html>
