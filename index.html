@@ -83,6 +83,12 @@
 
     .role-senior-dev{color:white;background-color:#3b82f6}
 
+    .machine.minimized > .body > .meta,
+    .machine.minimized > .body > .carton-progress-container,
+    .machine.minimized > .body > .machine-settings {
+      display: none;
+    }
+
     @keyframes blink-fire { 50% { opacity: 0.2; } }
     #chatNewMessageIcon.blinking { display: inline-block !important; animation: blink-fire 1s infinite; }
     #chatBody.collapsed { display: none; }
@@ -326,7 +332,8 @@
         <div class="flex items-center gap-2 completion-time-container">
           <span class="opacity-70">Przewidywany czas do końca:</span>
           <div class="completion-badge role-badge bg-gray-500 text-white">--:--</div>
-          <button class="btn ghost settings-toggle">⚙️</button>
+          <button class="btn ghost text-xl" data-action="minimize" title="Zminimalizuj / Rozwiń">➖</button>
+          <button class="btn ghost text-xl settings-toggle" data-action="settings" title="Ustawienia">⚙️</button>
         </div>
       </div>
       <div class="body">
@@ -459,12 +466,14 @@
       user: { uid: 'SoG1917' },
       users: USERS,
       machines:[
-        { code:'MA820061', durationMin:25, pruef:3600, piecesPerCarton: 3000 },
-        { code:'MA820062',  durationMin:22, pruef:3600, piecesPerCarton: 3000 },
-        { code:'MA820063', durationMin:25, pruef:3600, piecesPerCarton: 3000 },
-        { code:'MA820064', durationMin:25, pruef:3600, piecesPerCarton: 3000 },
-        { code:'MA820051', durationMin:25, pruef:3600, color: 'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png', piecesPerCarton: 3000 },
-        { code:'MA820054', durationMin:25, pruef:3600, color: 'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png', piecesPerCarton: 3000 },
+        { code:'MA820061', durationMin:25, pruef:3600, piecesPerCarton: 3000, minimized: false },
+        { code:'MA820062',  durationMin:22, pruef:3600, piecesPerCarton: 3000, minimized: false },
+        { code:'MA820063', durationMin:25, pruef:3600, piecesPerCarton: 3000, minimized: false },
+        { code:'MA820064', durationMin:25, pruef:3600, piecesPerCarton: 3000, minimized: false },
+        { code:'MA820051', durationMin:25, pruef:3600, color: 'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png', piecesPerCarton: 3000, minimized: true },
+        { code:'MA820054', durationMin:25, pruef:3600, color: 'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png', piecesPerCarton: 3000, minimized: true },
+        { code:'MA820059', durationMin:50, pruef:3600, piecesPerCarton: 3000, minimized: true },
+        { code:'MA820068', durationMin:25, pruef:3600, piecesPerCarton: 3000, minimized: true },
       ],
       orders:{
         'MA820051': { model: 'DASG-1 (201044)' },
@@ -474,6 +483,12 @@
     let CFG=JSON.parse(localStorage.getItem('KN007_CFG')||'null')||DEFAULTS;
     // ensure USERS is up to date
     if (CFG.users) { USERS = CFG.users; } else { CFG.users = USERS; }
+    // Data integrity check for machines
+    if (!CFG.machines || !Array.isArray(CFG.machines) || CFG.machines.length < 8) {
+        console.log('Incomplete machine data detected. Restoring defaults.');
+        CFG.machines = DEFAULTS.machines;
+        persist();
+    }
 
     const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
     const isAdmin=()=> CFG.user?.uid==='SoG1917';
@@ -853,10 +868,16 @@
         });
 
         this.settingsToggle = $('.settings-toggle', this.root);
+        this.minimizeBtn = $('[data-action="minimize"]', this.root);
         this.settingsPanel = $('.machine-settings', this.root);
         this.settingsInputs = $$('.setting-input', this.settingsPanel);
 
         this.settingsToggle.addEventListener('click', () => this.settingsPanel.classList.toggle('hidden'));
+        this.minimizeBtn.addEventListener('click', () => {
+            this.data.minimized = !this.data.minimized;
+            this.render();
+            persist();
+        });
         this.settingsInputs.forEach(input => {
             const eventType = input.type === 'checkbox' ? 'change' : 'keyup';
             input.addEventListener(eventType, (e) => {
@@ -921,6 +942,9 @@
         setStatus('Zapisano ' + key);
       }
       render() {
+        this.root.classList.toggle('minimized', !!this.data.minimized);
+        this.minimizeBtn.textContent = this.data.minimized ? '➕' : '➖';
+
         const order = this.orders[this.code] || {};
         $('.auf-val',this.root).textContent = order.auftrag || '—';
         $('.mdl-val',this.root).textContent = order.model || '—';
