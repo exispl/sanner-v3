@@ -46,7 +46,7 @@
     .pr-bar{position:relative;height:36px;border:1px solid var(--line);border-radius:14px;background:#0b1220;overflow:hidden}
     .pr-buttons button { font-size: 0.7rem; }
     .pr-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#22c55e,#84cc16);transition:width .5s linear}
-    .pr-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;letter-spacing:.3px}
+    .pr-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;letter-spacing:.3px;font-size:1.25rem}
     .pr-reset{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:4px 8px;cursor:pointer}
     /* Notes & Plans */
     .notes-list .row{display:flex;gap:10px;align-items:flex-start;border-bottom:1px dashed #263446;padding:8px 0}
@@ -331,6 +331,8 @@
             <input type="text" class="setting-input btn text-sm" data-source="order" data-key="model">
             <label>Czas (min):</label>
             <input type="number" class="setting-input btn text-sm w-24" data-source="machine" data-key="durationMin">
+            <label>Aktualny karton:</label>
+            <input type="number" class="setting-input btn text-sm w-24" data-source="machine" data-key="currentCarton" min="1" max="4">
             <label>Czas ukończenia:</label>
             <input type="text" class="setting-input btn text-sm" data-source="machine" data-key="completionTimestamp" placeholder="YYYY-MM-DD HH:MM:SS">
             <label>Następny gotowy:</label>
@@ -430,7 +432,8 @@
     // --- machines (minimal for 0.007 look)
     let activePruefung = null;
     class Pruefung{
-      constructor(root){
+      constructor(machine, root){
+        this.machine = machine;
         this.root=root;
         this.fill=$('.pr-fill',root);
         this.label=$('.pr-label',root);
@@ -439,7 +442,7 @@
         this.bar=$('.pr-bar', root);
         this.customButton = this.buttons.find(b => b.dataset.time === 'custom');
 
-        this.total=3600;
+        this.total = this.machine.data.pruef || 3600;
         this.start=Date.now();
         this.prufungType = 'short';
 
@@ -471,6 +474,7 @@
                     btn.classList.add('primary');
                     this.total = parseInt(v, 10);
                     this.start = Date.now();
+                    this.machine.updatePruefTime(this.total);
                     this.togglePrufungType();
                 });
             }
@@ -494,7 +498,7 @@
         this.total = Math.max(60, (parseInt(minutes, 10) || 0) * 60);
         this.start = Date.now();
         this.buttons.forEach(b => b.classList.remove('primary'));
-        this.togglePrufungType();
+        this.machine.updatePruefTime(this.total);
       }
 
       tick(){
@@ -534,8 +538,10 @@
             this.boxes = $$('.carton-box', container);
             this.fills = $$('.carton-fill', container);
             this.labels = $$('.carton-label', container);
+            this.machineData = machineData;
 
-            this.sequence = [0, 3, 1, 2]; // 0-indexed for visual layout: 1->4->2->3
+            this.sequence = [0, 3, 1, 2]; // visual indices
+            this.fillOrder = [1, 4, 3, 2]; // carton IDs in order of filling
             this.state = {
                 currentCartonSequenceIndex: 0,
                 startTime: Date.now(),
@@ -546,10 +552,33 @@
                     { id: 4, progress: 0, label: '#4' }
                 ]
             };
-            this.durationPerCarton = (machineData.durationMin || 25) * 60 * 1000 / 4;
+            this.durationPerCarton = (this.machineData.durationMin || 25) * 60 * 1000 / 4;
 
+            this.setCurrentCarton(this.machineData.currentCarton || this.fillOrder[0], false);
             this.bindEvents();
             this.tick();
+        }
+
+        setCurrentCarton(cartonNumber, resetStartTime = true) {
+            let startIndex = this.fillOrder.indexOf(cartonNumber);
+            if (startIndex === -1) startIndex = 0;
+
+            this.state.currentCartonSequenceIndex = startIndex;
+            if (resetStartTime) {
+                this.state.startTime = Date.now();
+            }
+
+            for (let i = 0; i < this.sequence.length; i++) {
+                const visualIndexOfBox = this.sequence[i];
+                const fillEl = this.fills[visualIndexOfBox];
+                if (i < startIndex) {
+                    fillEl.style.height = '100%';
+                    fillEl.classList.remove('blinking-green');
+                } else {
+                    fillEl.style.height = '0%';
+                    fillEl.classList.remove('blinking-green');
+                }
+            }
         }
 
         bindEvents() {
@@ -620,8 +649,7 @@
         }
 
         this.dot = $('.model-color-dot', this.root);
-        this.dot.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
+        this.dot.addEventListener('click', (e) => {
             PickerManager.open(this, e);
         });
 
@@ -642,13 +670,18 @@
         });
 
         container.appendChild(this.root);
-        this.pr = new Pruefung($('.pruef', this.root));
+        this.pr = new Pruefung(this, $('.pruef', this.root));
         this.cartons = new CartonProgress($('.carton-progress', this.root), data, this.orders);
 
         this.render();
         this.updateCompletionTime(); // Initial call
         this.completionInterval = setInterval(() => this.updateCompletionTime(), 60000); // Refresh every minute
     }
+      updatePruefTime(newTotalInSeconds) {
+        this.data.pruef = newTotalInSeconds;
+        persist();
+        setStatus('Zapisano nowy czas Prüfung dla ' + this.code);
+      }
       saveSetting(input) {
         const key = input.dataset.key;
         const source = input.dataset.source;
@@ -675,6 +708,10 @@
         } else if (source === 'order') {
             if (!this.orders[this.code]) this.orders[this.code] = genOrder();
             this.orders[this.code][key] = value;
+        }
+
+        if (key === 'currentCarton') {
+            this.cartons.setCurrentCarton(parseInt(value, 10));
         }
 
         input.blur();
@@ -1171,11 +1208,12 @@
                 activePruefung.setTime(input.value);
             }
             modal.classList.add('hidden');
+            input.value = '';
             activePruefung = null;
-            return false;
         });
         closeBtn.onclick = () => {
             modal.classList.add('hidden');
+            input.value = '';
             activePruefung = null;
         };
     }
