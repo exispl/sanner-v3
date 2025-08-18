@@ -38,8 +38,8 @@
     .machine .title h2{margin:0;font-size:26px;letter-spacing:.3px}
     .meta{color:var(--muted);font-size:12px;margin:6px 0}
     .model-color-dot { width: 29px !important; height: 34px !important; border-radius: 6px !important; }
-    .completion-time-container { font-size: 0.8rem; }
-    .completion-time-container .completion-badge { font-size: 0.8rem; padding: 4px 8px; }
+    .completion-time-container { font-size: 0.9rem; }
+    .completion-time-container .completion-badge { font-size: 0.9rem; padding: 4px 8px; }
     .progress{margin-top:6px;height:18px;border:1px solid var(--line);border-radius:12px;background:#0b1220;position:relative;overflow:hidden}
     .progress .bar{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,#22c55e,#86efac);transition:width .25s ease}
     .progress .label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px}
@@ -48,8 +48,8 @@
     .pr-head{display:flex;gap:8px;align-items:center;margin-bottom:6px}
     .pr-head select.pr-select{background:var(--panel2);border:1px solid var(--line);color:var(--yellow);padding:8px 10px;border-radius:10px}
     body[data-theme="light"] .model-color-dot { border-color: #cbd5e1 !important; }
-    .pr-bar{position:relative;height:36px;border:1px solid var(--line);border-radius:14px;background:#0b1220;overflow:hidden}
-    .pr-buttons button { font-size: 0.7rem; }
+    .pr-bar{position:relative;height:28px;border:1px solid var(--line);border-radius:14px;background:#0b1220;overflow:hidden}
+    .pr-buttons button { font-size: 0.65rem; }
     .pr-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#22c55e,#84cc16);transition:width .5s linear}
     .pr-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;letter-spacing:.3px;font-size:1.25rem}
     .pr-reset{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:4px 8px;cursor:pointer}
@@ -67,7 +67,26 @@
     .carton-box{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel2)}
     .carton-fill{position:absolute;bottom:0;left:0;right:0;width:100%;height:0%;background-color:var(--accent);transition:height .5s linear}
     .carton-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+
+    @keyframes blink-thumbnail {
+      50% { background-color: rgba(34, 197, 94, 0.25); border-color: rgba(34, 197, 94, 0.8); }
+    }
+    .carton-thumbnail.active-thumbnail {
+      border: 1px solid var(--accent);
+      animation: blink-thumbnail 2.5s infinite;
+    }
+    .carton-active-view .carton-label-large { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; }
+    .carton-active-view .carton-label-large .carton-id { font-size: 1.5rem; }
+    .carton-active-view .carton-label-large .carton-pieces { font-size: 1rem; font-variant-numeric: tabular-nums; }
+    .carton-bag-container { display: flex; width: 100%; height: 100%; gap: 1px; }
+    .carton-bag { flex: 1; position: relative; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--panel2); }
+
     .role-senior-dev{color:white;background-color:#3b82f6}
+
+    @keyframes blink-fire { 50% { opacity: 0.2; } }
+    #chatNewMessageIcon.blinking { display: inline-block !important; animation: blink-fire 1s infinite; }
+    #chatBody.collapsed { display: none; }
+
     .role-teamleiter{color:white;background-color:#ec4899}
     .role-einrichter{color:white;background-color:#f97316}
     .role-admin{color:white;background-color:#60a5fa}
@@ -83,9 +102,12 @@
     /* Chat stream */
     .alerts{display:flex;flex-wrap:wrap;gap:8px}
     .alert{display:flex;gap:8px;align-items:center;border:1px solid #2e3b53;border-radius:10px;padding:6px 10px;background:#0b1220}
-    @keyframes blink-opacity { 50% { opacity: 0.2; } }
+    @keyframes blink-gradient { 50% { opacity: 0.3; } }
     .pruef-bar-finished { border-color: transparent !important; }
-    .blinking-red-final { background: #ef4444 !important; animation: blink-opacity 1.5s infinite; }
+    .blinking-gradient-final {
+        background: linear-gradient(90deg, #ef4444, transparent) !important;
+        animation: blink-gradient 2s infinite;
+    }
     @keyframes blink-green { 50% { background-color: #22c55e80; } }
     .blinking-green { background-color: #22c55e !important; animation: blink-green 2s infinite; }
     .prufung-type-short { border: 1px solid var(--line) !important; }
@@ -169,9 +191,14 @@
       </div>
     </div>
 
-    <section class="panel mt-3">
-      <div class="head"><h2 class="m-0" data-translate-key="notesTitle">💬 CHAT</h2></div>
-      <div class="body">
+    <section id="chatWidget" class="panel mt-3">
+      <div id="chatHeader" class="head cursor-pointer">
+        <div class="flex items-center gap-2">
+          <h2 class="m-0" data-translate-key="notesTitle">💬 CHAT</h2>
+          <span id="chatNewMessageIcon" class="hidden text-xl">🔥</span>
+        </div>
+      </div>
+      <div id="chatBody" class="body">
         <div class="flex gap-2 flex-wrap">
           <input id="noteInput" class="btn" style="flex:1" data-translate-key="placeholderNote" placeholder="Wpisz wiadomość...">
           <button id="addNote" class="btn primary" data-translate-key="addNoteBtn">Wyślij</button>
@@ -216,20 +243,7 @@
   </div>
 
   <div id="colorPicker" class="hidden absolute panel p-2 z-20">
-    <div class="grid grid-cols-4 gap-2">
-      <button class="w-6 h-6 rounded-full" style="background-color: #ef4444;" data-color="#ef4444"></button>
-      <button class="w-6 h-6 rounded-full" style="background-color: #f97316;" data-color="#f97316"></button>
-      <button class="w-6 h-6 rounded-full" style="background-color: #eab308;" data-color="#eab308"></button>
-      <button class="w-6 h-6 rounded-full" style="background-color: #84cc16;" data-color="#84cc16"></button>
-      <button class="w-6 h-6 rounded-full" style="background-color: #22c55e;" data-color="#22c55e"></button>
-      <button class="w-6 h-6 rounded-full" style="background-color: #14b8a6;" data-color="#14b8a6"></button>
-      <button class="w-6 h-6 rounded-full" style="background-color: #3b82f6;" data-color="#3b82f6"></button>
-      <button class="w-6 h-6 rounded-full" style="background-color: #a855f7;" data-color="#a855f7"></button>
-      <button class="w-6 h-6 rounded-full" style="background-color: #ec4899;" data-color="#ec4899"></button>
-      <button class="w-6 h-6 rounded-full bg-white border" data-color="#ffffff"></button>
-      <button class="w-6 h-6 rounded-full bg-slate-400" data-color="#94a3b8"></button>
-      <button class="w-6 h-6 rounded-full bg-black border" data-color="#000000"></button>
-    </div>
+    <div class="grid grid-cols-5 gap-1"></div>
   </div>
 
   <div id="customTimeModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-20">
@@ -271,6 +285,22 @@
     </div>
   </div>
 
+  <div id="machineContextMenu" class="hidden absolute panel p-1 z-20">
+    <div class="flex flex-col gap-1">
+      <button class="btn ghost text-left" data-action="settings">⚙️ Ustawienia</button>
+      <button class="btn ghost text-left" data-action="reset_carton">🔄 Resetuj karton</button>
+      <button class="btn ghost text-left" data-action="swap">↔️ Zamień maszynę</button>
+    </div>
+  </div>
+
+  <div id="cartonContextMenu" class="hidden absolute panel p-1 z-20">
+    <div class="flex flex-col gap-1">
+      <button class="btn ghost text-left" data-action="set_pieces">✏️ Ustaw sztuki</button>
+      <button class="btn ghost text-left" data-action="start_from">➡️ Zacznij od tego</button>
+      <button class="btn ghost text-left" data-action="set_start_number">#️⃣ Ustaw numer początkowy</button>
+    </div>
+  </div>
+
   <footer class="wrap" id="adminFooter" style="display: none;">
     <div class="panel mt-3">
       <div class="head">
@@ -289,7 +319,10 @@
   <template id="tpl-machine">
     <article class="panel machine">
       <div class="head">
-        <div class="title"><span>🤖</span><h2 class="code"></h2></div>
+        <div class="title flex items-center gap-3">
+          <img src="http://sannergmbh.beep.pl/v3/dasg/15-dasg-1-gray.png" class="machine-color-dot-large w-9 h-10 rounded-md object-contain" alt="Machine Color">
+          <h2 class="code"></h2>
+        </div>
         <div class="flex items-center gap-2 completion-time-container">
           <span class="opacity-70">Przewidywany czas do końca:</span>
           <div class="completion-badge role-badge bg-gray-500 text-white">--:--</div>
@@ -312,7 +345,7 @@
             <div class="flex items-center gap-2">
                 <span data-translate-key="model">Model:</span>
                 <strong class="mdl-val font-bold text-base">—</strong>
-                <span class="bg-white/50 border-2 border-white/20 model-color-dot ml-auto" title="Zmień kolor"></span>
+                <img src="http://sannergmbh.beep.pl/v3/dasg/15-dasg-1-gray.png" class="model-color-dot ml-auto w-7 h-8 rounded-md cursor-pointer object-contain" title="Zmień kolor (PPM)">
             </div>
           </div>
           <div class="border border-white/10 rounded-lg p-2">
@@ -321,11 +354,13 @@
           </div>
         </div>
 
-        <div class="carton-progress grid grid-cols-2 grid-rows-2 gap-1.5 w-32 h-40 mx-auto mt-3">
-          <div class="carton-box" data-carton-id="1"><div class="carton-fill"></div><div class="carton-label">#1</div></div>
-          <div class="carton-box" data-carton-id="3"><div class="carton-fill"></div><div class="carton-label">#3</div></div>
-          <div class="carton-box" data-carton-id="2"><div class="carton-fill"></div><div class="carton-label">#2</div></div>
-          <div class="carton-box" data-carton-id="4"><div class="carton-fill"></div><div class="carton-label">#4</div></div>
+        <div class="carton-progress-container mt-4 flex gap-4 items-center justify-center">
+          <div class="carton-active-view carton-box w-32 h-40">
+            <!-- Active carton content is generated by JS -->
+          </div>
+          <div class="carton-thumbnails grid grid-cols-2 gap-1.5">
+            <!-- Thumbnails are generated by JS -->
+          </div>
         </div>
 
         <div class="pruef">
@@ -348,6 +383,8 @@
             <input type="text" class="setting-input btn text-sm" data-source="order" data-key="model">
             <label>Czas (min):</label>
             <input type="number" class="setting-input btn text-sm w-24" data-source="machine" data-key="durationMin">
+            <label>Sztuk w kartonie:</label>
+            <input type="number" class="setting-input btn text-sm w-24" data-source="machine" data-key="piecesPerCarton">
             <label>Aktualny karton:</label>
             <input type="number" class="setting-input btn text-sm w-24" data-source="machine" data-key="currentCarton" min="1" max="4">
             <label>Czas ukończenia:</label>
@@ -367,6 +404,7 @@
     const ORDERS_KEY='KN_ORDERS_V1';
     const NOTES_KEY='KN007_NOTES';
     const PLANS_KEY='KN007_PLANS';
+    const SHARED_CFG_KEY = 'KN_SHARED_CFG_V1';
     const ADMIN_PASS = 4753; // kod 0..1000 wymagany do publikacji SoG1917
 
     const TRANSLATIONS = {
@@ -421,12 +459,12 @@
       user: { uid: 'SoG1917' },
       users: USERS,
       machines:[
-        { code:'MA820061', durationMin:25, pruef:3600 },
-        { code:'MA820062',  durationMin:22, pruef:3600 },
-        { code:'MA820063', durationMin:25, pruef:3600 },
-        { code:'MA820064', durationMin:25, pruef:3600 },
-        { code:'MA820051', durationMin:25, pruef:3600, color: '#ffffff' },
-        { code:'MA820054', durationMin:25, pruef:3600, color: '#ffffff' },
+        { code:'MA820061', durationMin:25, pruef:3600, piecesPerCarton: 3000 },
+        { code:'MA820062',  durationMin:22, pruef:3600, piecesPerCarton: 3000 },
+        { code:'MA820063', durationMin:25, pruef:3600, piecesPerCarton: 3000 },
+        { code:'MA820064', durationMin:25, pruef:3600, piecesPerCarton: 3000 },
+        { code:'MA820051', durationMin:25, pruef:3600, color: 'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png', piecesPerCarton: 3000 },
+        { code:'MA820054', durationMin:25, pruef:3600, color: 'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png', piecesPerCarton: 3000 },
       ],
       orders:{
         'MA820051': { model: 'DASG-1 (201044)' },
@@ -439,7 +477,17 @@
 
     const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
     const isAdmin=()=> CFG.user?.uid==='SoG1917';
-    function persist(){ localStorage.setItem('KN007_CFG', JSON.stringify(CFG)); }
+    let persistDebounceTimer;
+    function persist(){
+        localStorage.setItem('KN007_CFG', JSON.stringify(CFG));
+
+        clearTimeout(persistDebounceTimer);
+        persistDebounceTimer = setTimeout(() => {
+            CFG.lastUpdate = Date.now();
+            saveShared(SHARED_CFG_KEY, CFG);
+            // console.log('Persisted to server');
+        }, 1000);
+    }
     function setStatus(t){ $('#statusLine').textContent='Status: '+t; }
 
     // --- kv storage via php
@@ -447,7 +495,7 @@
     async function loadShared(key){ try{ const res=await fetch('storage.php?a=get&key='+encodeURIComponent(key)); const j=await res.json(); return j.v?JSON.parse(j.v):null; }catch(e){ console.error(e); return null; } }
 
     // --- machines (minimal for 0.007 look)
-    let activePruefung = null;
+    let activeTimeSetterCallback = null;
     class Pruefung{
       constructor(machine, root){
         this.machine = machine;
@@ -505,9 +553,7 @@
 
         this.bar.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            activePruefung = this;
-            $('#customTimeModal').classList.remove('hidden');
-            $('#customTimeInput').focus();
+            openCustomTimeModal((minutes) => this.setTime(minutes));
         });
       }
 
@@ -528,14 +574,13 @@
         if (left <= 0) {
             if (!this.bar.classList.contains('pruef-bar-finished')) {
                 this.bar.classList.add('pruef-bar-finished');
-                this.fill.classList.remove('blinking-red-final'); // remove old animation class
-                this.fill.classList.add('blinking-red-final'); // add new one
+                this.fill.classList.add('blinking-gradient-final');
                 this.label.style.display = 'none';
             }
         } else {
             if (this.bar.classList.contains('pruef-bar-finished')) {
                 this.bar.classList.remove('pruef-bar-finished');
-                this.fill.classList.remove('blinking-red-final');
+                this.fill.classList.remove('blinking-gradient-final');
                 this.label.style.display = 'flex';
             }
             const hue = 120 * (1 - pct);
@@ -552,104 +597,210 @@
     class CartonProgress {
         constructor(container, machineData, orderData) {
             this.container = container;
-            this.boxes = $$('.carton-box', container);
-            this.fills = $$('.carton-fill', container);
-            this.labels = $$('.carton-label', container);
             this.machineData = machineData;
+            this.isMA820059 = this.machineData.code === 'MA820059';
 
-            this.sequence = [0, 3, 1, 2]; // visual indices
-            this.fillOrder = [1, 4, 3, 2]; // carton IDs in order of filling
+            this.totalPieces = this.machineData.piecesPerCarton || 3000;
+            this.piecesPerBag = this.isMA820059 ? this.totalPieces : this.totalPieces;
+            this.numBags = this.isMA820059 ? 2 : 1;
+
+            const timePerCartonMs = (this.machineData.durationMin || 25) * 60 * 1000;
+            this.timePerPiece = timePerCartonMs / (this.piecesPerBag * this.numBags);
+
+            if (!this.machineData.cartonState) {
+                this.machineData.cartonState = [
+                    { id: 1, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) },
+                    { id: 2, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) },
+                    { id: 3, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) },
+                    { id: 4, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) },
+                ];
+            }
+            this.startNumber = this.machineData.cartonStartNumber || 1;
+
             this.state = {
-                currentCartonSequenceIndex: 0,
-                startTime: Date.now(),
-                cartons: [
-                    { id: 1, progress: 0, label: '#1' },
-                    { id: 2, progress: 0, label: '#2' },
-                    { id: 3, progress: 0, label: '#3' },
-                    { id: 4, progress: 0, label: '#4' }
-                ]
+                currentCartonId: this.machineData.currentCarton || 1,
+                startTime: this.machineData.cartonStartTime || Date.now(),
+                cartons: this.machineData.cartonState,
             };
-            this.durationPerCarton = (this.machineData.durationMin || 25) * 60 * 1000 / 4;
+            this.machineData.cartonStartTime = this.state.startTime;
 
-            this.setCurrentCarton(this.machineData.currentCarton || this.fillOrder[0], false);
-            this.bindEvents();
+
+            this.initDOM();
+            this.setCurrentCarton(this.state.currentCartonId, false);
             this.tick();
         }
 
-        setCurrentCarton(cartonNumber, resetStartTime = true) {
-            let startIndex = this.fillOrder.indexOf(cartonNumber);
-            if (startIndex === -1) startIndex = 0;
+        initDOM() {
+            this.activeView = $('.carton-active-view', this.container);
+            this.thumbnailsContainer = $('.carton-thumbnails', this.container);
+            this.thumbnails = [];
 
-            this.state.currentCartonSequenceIndex = startIndex;
-            if (resetStartTime) {
-                this.state.startTime = Date.now();
-            }
-
-            for (let i = 0; i < this.sequence.length; i++) {
-                const visualIndexOfBox = this.sequence[i];
-                const fillEl = this.fills[visualIndexOfBox];
-                if (i < startIndex) {
-                    fillEl.style.height = '100%';
-                    fillEl.classList.remove('blinking-green');
-                } else {
-                    fillEl.style.height = '0%';
-                    fillEl.classList.remove('blinking-green');
-                }
-            }
-        }
-
-        bindEvents() {
-            this.boxes.forEach((box, index) => {
-                box.addEventListener('contextmenu', (e) => {
+            this.thumbnailsContainer.innerHTML = '';
+            for (let i = 1; i <= 4; i++) {
+                const thumb = document.createElement('div');
+                thumb.className = 'carton-box carton-thumbnail w-12 h-16';
+                thumb.dataset.cartonId = i;
+                const displayId = i + this.startNumber - 1;
+                thumb.innerHTML = `<div class="carton-fill"></div><div class="carton-label text-xs">#${displayId}</div>`;
+                this.thumbnailsContainer.appendChild(thumb);
+                this.thumbnails.push(thumb);
+                thumb.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
-                    const cartonId = parseInt(box.dataset.cartonId, 10);
-                    showCustomConfirm(`Zresetować karton #${cartonId}?`, (confirmed) => {
-                        if (confirmed) {
-                            this.resetCarton(index);
-                        }
-                    });
+                    CartonContextMenuManager.open(this, i, e);
                 });
+            }
+        }
+
+        renderActiveView() {
+            const carton = this.state.cartons[this.state.currentCartonId - 1];
+            if (!carton) return;
+
+            this.activeView.innerHTML = '';
+
+            if (this.isMA820059) {
+                const activeDisplayId = this.state.currentCartonId + this.startNumber - 1;
+                this.activeView.innerHTML = `
+                    <div class="carton-label-large"><span class="carton-id">#${activeDisplayId}</span></div>
+                    <div class="carton-bag-container">
+                        <div class="carton-bag"><div class="carton-fill"></div><div class="carton-label"></div></div>
+                        <div class="carton-bag"><div class="carton-fill"></div><div class="carton-label"></div></div>
+                    </div>`;
+
+                const bagEls = $$('.carton-bag', this.activeView);
+                for(let i = 0; i < this.numBags; i++) {
+                    const bag = carton.bags[i] || {pieces: 0};
+                    const progress = Math.min(1, bag.pieces / this.piecesPerBag);
+                    $('.carton-fill', bagEls[i]).style.height = `${progress * 100}%`;
+                    $('.carton-label', bagEls[i]).textContent = `${bag.pieces}/${this.piecesPerBag}`;
+                }
+
+            } else {
+                const bag = carton.bags[0] || {pieces: 0};
+                const progress = Math.min(1, bag.pieces / this.piecesPerBag);
+                const activeDisplayId = this.state.currentCartonId + this.startNumber - 1;
+                this.activeView.innerHTML = `
+                    <div class="carton-fill" style="height: ${progress * 100}%"></div>
+                    <div class="carton-label-large">
+                        <span class="carton-id">#${activeDisplayId}</span>
+                        <span class="carton-pieces">${bag.pieces}/${this.piecesPerBag}</span>
+                    </div>`;
+            }
+        }
+
+        renderThumbnails() {
+            this.thumbnails.forEach((thumb, index) => {
+                const carton = this.state.cartons[index];
+                if(!carton) return;
+                const totalPieces = carton.bags.reduce((sum, bag) => sum + bag.pieces, 0);
+                const totalCapacity = this.piecesPerBag * this.numBags;
+                const progress = Math.min(1, totalPieces / totalCapacity);
+
+                $('.carton-fill', thumb).style.height = `${progress * 100}%`;
+
+                thumb.classList.toggle('active-thumbnail', carton.id === this.state.currentCartonId);
             });
         }
 
-        resetCarton(visualIndex) {
-            const cartonDataIndex = this.state.cartons.findIndex(c => this.sequence[c.id -1] === visualIndex);
-            // This is getting complicated. Let's simplify. The visual index IS the carton index for binding.
-            const cartonId = visualIndex + 1; // assuming visual order is 0,1,2,3
+        setCurrentCarton(cartonId, resetProgress = true) {
+            this.state.currentCartonId = cartonId;
+            this.machineData.currentCarton = cartonId;
 
-            this.state.currentCartonSequenceIndex = this.sequence.indexOf(visualIndex);
-            this.state.startTime = Date.now();
+            if (resetProgress) {
+                for (let i = cartonId - 1; i < this.state.cartons.length; i++) {
+                    if(this.state.cartons[i]) this.state.cartons[i].bags.forEach(b => b.pieces = 0);
+                }
+                const totalElapsedPieces = (this.state.currentCartonId - 1) * this.piecesPerBag * this.numBags;
+                this.state.startTime = Date.now() - (totalElapsedPieces * this.timePerPiece);
+                this.machineData.cartonStartTime = this.state.startTime;
+            }
+            this.tick();
+        }
 
-            // Reset all fills
-            this.fills.forEach(fill => {
-                fill.style.height = '0%';
-                fill.classList.remove('blinking-green');
-            });
+        setPieces(num) {
+            const carton = this.state.cartons[this.state.currentCartonId - 1];
+            if (!carton) return;
+
+            let currentBagIndex = 0;
+            if(this.isMA820059) {
+                 const totalElapsedMs = Date.now() - this.state.startTime;
+                 const totalPiecesProduced = Math.floor(totalElapsedMs / this.timePerPiece);
+                 const piecesIntoCurrentCarton = totalPiecesProduced % (this.piecesPerBag * this.numBags);
+                 currentBagIndex = Math.floor(piecesIntoCurrentCarton / this.piecesPerBag);
+                 if(currentBagIndex > 1) currentBagIndex = 1;
+            }
+            const bag = carton.bags[currentBagIndex];
+            if(!bag) return;
+            bag.pieces = Math.max(0, Math.min(num, this.piecesPerBag));
+
+            let totalElapsedPieces = (this.state.currentCartonId - 1) * this.piecesPerBag * this.numBags;
+            for(let i=0; i<currentBagIndex; i++) {
+                totalElapsedPieces += this.piecesPerBag;
+            }
+            totalElapsedPieces += bag.pieces;
+
+            this.state.startTime = Date.now() - (totalElapsedPieces * this.timePerPiece);
+            this.machineData.cartonStartTime = this.state.startTime;
+
+            this.tick();
+            persist();
+        }
+
+        setStartNumber(num) {
+            this.startNumber = num;
+            this.machineData.cartonStartNumber = num;
+            this.initDOM(); // Re-initialize to update labels
+            this.renderActiveView();
+            this.renderThumbnails();
+            persist();
         }
 
         tick() {
-            if (this.state.currentCartonSequenceIndex >= this.sequence.length) {
-                // All cartons are full, just ensure the last one blinks
-                const lastCartonVisualIndex = this.sequence[this.sequence.length - 1];
-                if (!this.fills[lastCartonVisualIndex].classList.contains('blinking-green')) {
-                    this.fills[lastCartonVisualIndex].classList.add('blinking-green');
+            const totalElapsedMs = Date.now() - this.state.startTime;
+            const totalPiecesProduced = Math.floor(totalElapsedMs / this.timePerPiece);
+
+            const piecesPerCarton = this.piecesPerBag * this.numBags;
+            const completedCartons = Math.floor(totalPiecesProduced / piecesPerCarton);
+
+            const newCartonId = completedCartons + 1;
+
+            if (newCartonId > 4) {
+                 this.state.currentCartonId = 4;
+            } else {
+                this.state.currentCartonId = newCartonId;
+            }
+            this.machineData.currentCarton = this.state.currentCartonId;
+
+            for(let i = 0; i < 4; i++) {
+                const carton = this.state.cartons[i];
+                if (!carton) continue;
+                if (i < completedCartons) {
+                    carton.bags.forEach(b => b.pieces = this.piecesPerBag);
+                } else if (i > completedCartons) {
+                    carton.bags.forEach(b => b.pieces = 0);
                 }
-                requestAnimationFrame(() => this.tick());
-                return;
             }
 
-            const now = Date.now();
-            const elapsedTime = now - this.state.startTime;
-            const progress = Math.min(1, elapsedTime / this.durationPerCarton);
+            const piecesIntoCurrentCarton = totalPiecesProduced % piecesPerCarton;
+            const currentCarton = this.state.cartons[this.state.currentCartonId - 1];
 
-            const activeCartonVisualIndex = this.sequence[this.state.currentCartonSequenceIndex];
-            this.fills[activeCartonVisualIndex].style.height = (progress * 100) + '%';
-
-            if (progress >= 1) {
-                this.fills[activeCartonVisualIndex].classList.add('blinking-green');
-                this.state.currentCartonSequenceIndex++;
-                this.state.startTime = Date.now(); // Reset timer for the next carton
+            if(currentCarton) {
+                if (this.isMA820059) {
+                    const currentBagIndex = Math.floor(piecesIntoCurrentCarton / this.piecesPerBag);
+                    if(currentBagIndex < 2) {
+                        if(currentCarton.bags[0]) currentCarton.bags[0].pieces = (currentBagIndex > 0) ? this.piecesPerBag : (piecesIntoCurrentCarton % this.piecesPerBag);
+                        if(currentCarton.bags[1]) currentCarton.bags[1].pieces = (currentBagIndex > 0) ? (piecesIntoCurrentCarton % this.piecesPerBag) : 0;
+                    } else {
+                        currentCarton.bags.forEach(b => b.pieces = this.piecesPerBag);
+                    }
+                } else {
+                    if(currentCarton.bags[0]) currentCarton.bags[0].pieces = piecesIntoCurrentCarton;
+                }
             }
+
+            this.renderActiveView();
+            this.renderThumbnails();
+
+            if(Date.now() % 20 === 0) persist();
 
             requestAnimationFrame(() => this.tick());
         }
@@ -669,17 +820,37 @@
             openSwapModal(this);
         });
 
+        const headEl = $('.head', this.root);
+        headEl.addEventListener('contextmenu', (e) => {
+            // Avoid opening on top of other context menus
+            if (e.target.closest('.model-color-dot, .machine-color-dot-large')) return;
+            ContextMenuManager.open(this, e);
+        });
+
 
         if (!this.data.completionTimestamp) {
           this.data.completionTimestamp = Date.now() + (Math.floor(Math.random() * 14940) + 60) * 1000;
         }
 
         this.dot = $('.model-color-dot', this.root);
-        this.dot.addEventListener('click', (e) => {
+        this.dot.addEventListener('contextmenu', (e) => {
+            PickerManager.open(this, e);
+        });
+        // Also add to the large dot
+        $('.machine-color-dot-large', this.root).addEventListener('contextmenu', (e) => {
             PickerManager.open(this, e);
         });
 
         this.completionBadgeEl = $('.completion-badge', this.root);
+        this.completionBadgeEl.parentElement.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            openCustomTimeModal((minutes) => {
+                const newTimestamp = Date.now() + (minutes * 60 * 1000);
+                this.data.completionTimestamp = newTimestamp;
+                this.updateCompletionTime();
+                persist();
+            });
+        });
 
         this.settingsToggle = $('.settings-toggle', this.root);
         this.settingsPanel = $('.machine-settings', this.root);
@@ -741,7 +912,7 @@
         }
 
         if (key === 'model' && String(value).includes('201044')) {
-            this.data.color = '#ffffff';
+            this.data.color = 'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png';
         }
 
         input.blur();
@@ -759,7 +930,19 @@
         const nextReadyCheck = order.nextReady ? ' <span class="text-green-400">✔️</span>' : '';
         $('.nextauf-val',this.root).innerHTML = nextAufVal + nextReadyCheck;
 
-        this.dot.style.backgroundColor = this.data.color || '#94a3b8';
+        const colorUrl = this.data.color || 'http://sannergmbh.beep.pl/v3/dasg/15-dasg-1-gray.png';
+        this.dot.src = colorUrl;
+        const largeDot = $('.machine-color-dot-large', this.root);
+        if (largeDot) largeDot.src = colorUrl;
+
+        const isLightTheme = document.body.dataset.theme === 'light';
+        if (this.data.color && this.data.color.includes('white') && isLightTheme) {
+          this.dot.style.border = '1px solid #9ca3af';
+          if(largeDot) largeDot.style.border = '1px solid #9ca3af';
+        } else {
+          this.dot.style.border = 'none';
+          if(largeDot) largeDot.style.border = 'none';
+        }
 
         // Populate settings inputs
         this.settingsInputs.forEach(input => {
@@ -850,6 +1033,7 @@
 
     // --- notes / plans
     let NOTES=[], PLANS=[];
+    let lastNoteCount = 0;
     function renderNotes(){
       const list=$('#notesList'); list.innerHTML='';
       NOTES.forEach(n=>{
@@ -881,7 +1065,17 @@
       });
     }
     async function saveNotes(){ await saveShared(NOTES_KEY, NOTES); }
-    async function loadNotes(){ const db=await loadShared(NOTES_KEY); if(db){ NOTES=db; } renderNotes(); }
+    async function loadNotes(){
+        const db=await loadShared(NOTES_KEY);
+        if(db){
+            if (lastNoteCount > 0 && db.length > lastNoteCount && $('#chatBody').classList.contains('collapsed')) {
+                $('#chatNewMessageIcon').classList.add('blinking');
+            }
+            NOTES=db;
+            lastNoteCount = db.length;
+        }
+        renderNotes();
+    }
     async function savePlans(){ await saveShared(PLANS_KEY, PLANS); }
     async function loadPlans(){ const db=await loadShared(PLANS_KEY); if(db){ PLANS=db; } renderPlans(); }
 
@@ -1072,14 +1266,36 @@
         }
         NOTES.push({id:Date.now()+Math.random(), ts:Date.now(), user:CFG.user.uid, userName:CFG.user.name, text:v, status});
         $('#noteInput').value=''; await saveNotes(); renderNotes();
+        $('#chatNewMessageIcon').classList.remove('blinking');
+        lastNoteCount = NOTES.length;
       };
 
       $('#addNote').onclick = addNoteAction;
-      $('#noteInput').addEventListener('keyup', (e) => {
+      $('#noteInput').addEventListener('keydown', (e) => {
           if (e.key === 'Enter') {
+              e.preventDefault();
               addNoteAction();
           }
       });
+
+      const chatHeader = $('#chatHeader');
+      const chatBody = $('#chatBody');
+      const chatIcon = $('#chatNewMessageIcon');
+
+      chatHeader.addEventListener('click', () => {
+          chatBody.classList.toggle('collapsed');
+          if (!chatBody.classList.contains('collapsed')) {
+              chatIcon.classList.remove('blinking');
+              lastNoteCount = NOTES.length;
+              chatBody.classList.add('user-opened');
+          }
+      });
+
+      setTimeout(() => {
+          if(!chatBody.classList.contains('user-opened')) {
+             chatBody.classList.add('collapsed');
+          }
+      }, 5000);
 
       $('#addPlan').onclick=async()=>{
         const v=$('#planInput').value.trim(); if(!v) return;
@@ -1087,14 +1303,13 @@
         $('#planInput').value=''; await savePlans(); renderPlans();
       };
 
-      $('#refreshNP').onclick=async()=>{ await loadNotes(); await loadPlans(); };
-
       loadNotes();
       loadPlans();
 
       setInterval(() => {
         loadNotes();
         loadPlans();
+        loadSharedConfig();
       }, 30000);
     }
 
@@ -1230,31 +1445,55 @@
         setLanguage(CFG.language || 'pl');
     }
 
+    function openCustomTimeModal(callback) {
+        const modal = $('#customTimeModal');
+        activeTimeSetterCallback = callback;
+        modal.classList.remove('hidden');
+        $('#customTimeInput').focus();
+    }
+
     function initCustomTimeModal() {
         const modal = $('#customTimeModal');
         const form = $('#customTimeForm');
         const input = $('#customTimeInput');
         const closeBtn = $('#closeTimeModalBtn');
 
+        const close = () => {
+            modal.classList.add('hidden');
+            input.value = '';
+            activeTimeSetterCallback = null;
+        }
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            if (activePruefung) {
-                activePruefung.setTime(input.value);
+            if (activeTimeSetterCallback) {
+                activeTimeSetterCallback(input.value);
             }
-            modal.classList.add('hidden');
-            input.value = '';
-            activePruefung = null;
+            close();
         });
-        closeBtn.onclick = () => {
-            modal.classList.add('hidden');
-            input.value = '';
-            activePruefung = null;
-        };
+        closeBtn.onclick = close;
     }
 
     const PickerManager = (() => {
         const picker = $('#colorPicker');
+        const grid = picker ? $('.grid', picker) : null;
         let activeMachine = null;
+
+        const COLOR_IMAGES = [
+            'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png', 'http://sannergmbh.beep.pl/v3/dasg/02-dasg-1-red.png',
+            'http://sannergmbh.beep.pl/v3/dasg/03-dasg-1-green.png', 'http://sannergmbh.beep.pl/v3/dasg/04-dasg-1-blue.png',
+            'http://sannergmbh.beep.pl/v3/dasg/05-dasg-1-yellow.png', 'http://sannergmbh.beep.pl/v3/dasg/06-dasg-1-magenta.png',
+            'http://sannergmbh.beep.pl/v3/dasg/07-dasg-1-cyan.png', 'http://sannergmbh.beep.pl/v3/dasg/08-dasg-1-maroon.png',
+            'http://sannergmbh.beep.pl/v3/dasg/09-dasg-1-darkgreen.png', 'http://sannergmbh.beep.pl/v3/dasg/10-dasg-1-navy.png',
+            'http://sannergmbh.beep.pl/v3/dasg/11-dasg-1-olive.png', 'http://sannergmbh.beep.pl/v3/dasg/12-dasg-1-purple.png',
+            'http://sannergmbh.beep.pl/v3/dasg/13-dasg-1-teal.png', 'http://sannergmbh.beep.pl/v3/dasg/14-dasg-1-silver.png',
+            'http://sannergmbh.beep.pl/v3/dasg/15-dasg-1-gray.png', 'http://sannergmbh.beep.pl/v3/dasg/16-dasg-1-black.png',
+            'http://sannergmbh.beep.pl/v3/dasg/17-dasg-1-orange.png', 'http://sannergmbh.beep.pl/v3/dasg/18-dasg-1-lightblue.png',
+            'http://sannergmbh.beep.pl/v3/dasg/19-dasg-1-indigo.png', 'http://sannergmbh.beep.pl/v3/dasg/20-dasg-1-pink.png',
+            'http://sannergmbh.beep.pl/v3/dasg/21-dasg-1-darkgreen2.png', 'http://sannergmbh.beep.pl/v3/dasg/22-dasg-1-saddlebrown.png',
+            'http://sannergmbh.beep.pl/v3/dasg/23-dasg-1-gold.png', 'http://sannergmbh.beep.pl/v3/dasg/24-dasg-1-steelblue.png',
+            'http://sannergmbh.beep.pl/v3/dasg/25-dasg-1-mediumslateblue.png'
+        ];
 
         const close = () => {
             if (picker) picker.classList.add('hidden');
@@ -1262,30 +1501,45 @@
         };
 
         const open = (machine, e) => {
-            activeMachine = machine;
-            picker.style.left = e.pageX + 'px';
-            picker.style.top = e.pageY + 'px';
-            picker.classList.remove('hidden');
+            e.preventDefault();
+            if (picker.classList.contains('hidden')) {
+              activeMachine = machine;
+              picker.style.left = e.pageX + 'px';
+              picker.style.top = e.pageY + 'px';
+              picker.classList.remove('hidden');
+            } else {
+              close();
+            }
         };
 
-        if(picker) {
-            $$('button', picker).forEach(button => {
-                button.addEventListener('click', (e) => {
+        const init = () => {
+            if (!picker || !grid) return;
+
+            grid.innerHTML = '';
+            COLOR_IMAGES.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = 'w-7 h-8 rounded-md cursor-pointer hover:scale-125 transition-transform object-contain';
+                img.dataset.colorUrl = url;
+                grid.appendChild(img);
+
+                img.addEventListener('click', (e) => {
                     e.stopPropagation();
                     if (activeMachine) {
-                        activeMachine.setColor(button.dataset.color);
+                        activeMachine.setColor(img.dataset.colorUrl);
                     }
                     close();
                 });
             });
 
             document.addEventListener('click', (e) => {
-                if (activeMachine && !picker.contains(e.target)) {
+                if (activeMachine && picker && !picker.contains(e.target)) {
                     close();
                 }
-            });
-        }
+            }, true); // Use capture phase to catch clicks outside
+        };
 
+        init();
         return { open };
     })();
 
@@ -1418,7 +1672,138 @@
         };
     }
 
-    function init(){ initThemeSwitcher(); initLangSwitcher(); initMachines(); initLogin(); initNotesPlans(); initUserDetailsModal(); renderAdminPanel(); initCustomTimeModal(); initSwapMachineModal(); }
+    const ContextMenuManager = (() => {
+        const menu = $('#machineContextMenu');
+        let activeMachine = null;
+
+        const close = () => {
+            if (menu) menu.classList.add('hidden');
+            activeMachine = null;
+        };
+
+        const open = (machine, e) => {
+            e.preventDefault();
+            activeMachine = machine;
+            menu.style.left = e.pageX + 'px';
+            menu.style.top = e.pageY + 'px';
+            menu.classList.remove('hidden');
+        };
+
+        const init = () => {
+            if (!menu) return;
+            $$('button', menu).forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const action = button.dataset.action;
+                    if (activeMachine && action) {
+                        switch(action) {
+                            case 'settings':
+                                activeMachine.settingsPanel.classList.toggle('hidden');
+                                break;
+                            case 'reset_carton':
+                                showCustomConfirm(`Zresetować postęp kartonów dla ${activeMachine.code}?`, (confirmed) => {
+                                    if (confirmed) {
+                                        activeMachine.cartons.setCurrentCarton(1, true);
+                                    }
+                                });
+                                break;
+                            case 'set_start_number':
+                                const newStart = prompt(`Wprowadź numer początkowy dla sekwencji kartonów:`, activeCartonManager.startNumber);
+                                if (newStart !== null && !isNaN(parseInt(newStart))) {
+                                    activeCartonManager.setStartNumber(parseInt(newStart));
+                                }
+                                break;
+                            case 'swap':
+                                openSwapModal(activeMachine);
+                                break;
+                        }
+                    }
+                    close();
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (activeMachine && !menu.contains(e.target)) {
+                    close();
+                }
+            }, true);
+        };
+
+        init();
+        return { open };
+    })();
+
+    const CartonContextMenuManager = (() => {
+        const menu = $('#cartonContextMenu');
+        let activeCartonManager = null;
+        let activeCartonId = null;
+
+        const close = () => {
+            if (menu) menu.classList.add('hidden');
+            activeCartonManager = null;
+            activeCartonId = null;
+        };
+
+        const open = (cartonManager, cartonId, e) => {
+            e.preventDefault();
+            activeCartonManager = cartonManager;
+            activeCartonId = cartonId;
+            menu.style.left = e.pageX + 'px';
+            menu.style.top = e.pageY + 'px';
+            menu.classList.remove('hidden');
+        };
+
+        const init = () => {
+            if (!menu) return;
+            $$('button', menu).forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const action = button.dataset.action;
+                    if (activeCartonManager && action) {
+                        switch(action) {
+                            case 'set_pieces':
+                                const currentPcs = activeCartonManager.state.currentPieces;
+                                const newPieces = prompt(`Wprowadź aktualną liczbę sztuk dla kartonu #${activeCartonId}:`, currentPcs);
+                                if (newPieces !== null && !isNaN(parseInt(newPieces))) {
+                                    activeCartonManager.setPieces(parseInt(newPieces));
+                                }
+                                break;
+                            case 'start_from':
+                                showCustomConfirm(`Rozpocząć produkcję od kartonu #${activeCartonId}?`, (confirmed) => {
+                                    if (confirmed) {
+                                        activeCartonManager.setCurrentCarton(activeCartonId, true);
+                                    }
+                                });
+                                break;
+                        }
+                    }
+                    close();
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (activeCartonManager && !menu.contains(e.target)) {
+                    close();
+                }
+            }, true);
+        };
+
+        init();
+        return { open };
+    })();
+
+    function initSettings() {
+        const settingsBtn = $('#settingsBtn');
+        const adminFooter = $('#adminFooter');
+        if (settingsBtn && adminFooter && isAdmin()) {
+            settingsBtn.addEventListener('click', () => {
+                const isHidden = adminFooter.style.display === 'none';
+                adminFooter.style.display = isHidden ? 'block' : 'none';
+            });
+        }
+    }
+
+    function init(){ initThemeSwitcher(); initLangSwitcher(); initMachines(); initLogin(); initNotesPlans(); initUserDetailsModal(); renderAdminPanel(); initCustomTimeModal(); initSwapMachineModal(); initSettings(); }
     init();
   </script>
 </body>
