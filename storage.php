@@ -16,8 +16,21 @@ function table_init() {
   pdo_conn()->exec($sql);
 }
 
-$action = $_GET['a'] ?? $_POST['a'] ?? 'get';
-$key    = $_GET['key'] ?? $_POST['key'] ?? 'KN_SHARED_V1';
+// PHP 5.x compatible - START
+$action = 'get';
+if (isset($_GET['a'])) {
+    $action = $_GET['a'];
+} else if (isset($_POST['a'])) {
+    $action = $_POST['a'];
+}
+
+$key = 'KN_SHARED_V1';
+if (isset($_GET['key'])) {
+    $key = $_GET['key'];
+} else if (isset($_POST['key'])) {
+    $key = $_POST['key'];
+}
+// PHP 5.x compatible - END
 
 try {
   table_init();
@@ -26,15 +39,24 @@ try {
     $raw = file_get_contents('php://input');
     if (isset($_POST['v'])) { $raw = $_POST['v']; }
     $stmt = pdo_conn()->prepare("REPLACE INTO kv_store (k,v) VALUES (?,?)");
-    $stmt->execute([$key, $raw]);
-    echo json_encode(['ok'=>true]); exit;
+    $stmt->execute(array($key, $raw));
+    echo json_encode(array('ok'=>true)); exit;
   }
 
   $stmt = pdo_conn()->prepare("SELECT v FROM kv_store WHERE k=?");
-  $stmt->execute([$key]);
+  $stmt->execute(array($key));
   $row = $stmt->fetch();
-  echo json_encode(['ok'=>true,'v'=>$row['v'] ?? null]);
-} catch (Throwable $e) {
+
+  // PHP 5.x compatible - START
+  $value = null;
+  if (isset($row['v'])) {
+      $value = $row['v'];
+  }
+  echo json_encode(array('ok'=>true,'v'=>$value));
+  // PHP 5.x compatible - END
+
+} catch (Exception $e) { // Changed from Throwable for PHP 5.x compatibility
   http_response_code(500);
-  echo json_encode(['ok'=>false,'error'=>$e->getMessage()]);
+  echo json_encode(array('ok'=>false,'error'=>$e->getMessage()));
 }
+?>

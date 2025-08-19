@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Kartonowy Napełniacz — v0.007r</title>
+  <title>Kartonowy Napełniacz — v0.008</title>
   <link rel="icon" href="favicon.ico">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -37,23 +37,17 @@
     .machine .title{display:flex;align-items:center;gap:10px}
     .machine .title h2{margin:0;font-size:26px;letter-spacing:.3px}
     .meta{color:var(--muted);font-size:12px;margin:6px 0}
-    .model-color-dot { width: 29px !important; height: 34px !important; border-radius: 6px !important; }
     .completion-time-container { font-size: 0.9rem; }
     .completion-time-container .completion-badge { font-size: 0.9rem; padding: 4px 8px; }
     .progress{margin-top:6px;height:18px;border:1px solid var(--line);border-radius:12px;background:#0b1220;position:relative;overflow:hidden}
     .progress .bar{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,#22c55e,#86efac);transition:width .25s ease}
     .progress .label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px}
-    /* Prüfung bigger + themed select with yellow text */
     .pruef{margin-top:10px}
-    .pr-head{display:flex;gap:8px;align-items:center;margin-bottom:6px}
-    .pr-head select.pr-select{background:var(--panel2);border:1px solid var(--line);color:var(--yellow);padding:8px 10px;border-radius:10px}
-    body[data-theme="light"] .model-color-dot { border-color: #cbd5e1 !important; }
     .pr-bar{position:relative;height:28px;border:1px solid var(--line);border-radius:14px;background:#0b1220;overflow:hidden}
     .pr-buttons button { font-size: 0.65rem; }
     .pr-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#22c55e,#84cc16);transition:width .5s linear}
     .pr-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;letter-spacing:.3px;font-size:1.25rem}
     .pr-reset{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:4px 8px;cursor:pointer}
-    /* Notes & Plans */
     .notes-list .row{display:flex;gap:10px;align-items:flex-start;border-bottom:1px dashed #263446;padding:8px 0}
     .stamp{display:inline-flex;gap:6px;align-items:center}
     .stamp .chip{background:#0b1220;border:1px solid #263446;border-radius:999px;padding:2px 6px}
@@ -67,32 +61,20 @@
     .carton-box{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel2)}
     .carton-fill{position:absolute;bottom:0;left:0;right:0;width:100%;height:0%;background-color:var(--accent);transition:height .5s linear}
     .carton-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
-
-    @keyframes blink-thumbnail {
-      50% { background-color: rgba(34, 197, 94, 0.25); border-color: rgba(34, 197, 94, 0.8); }
-    }
-    .carton-thumbnail.active-thumbnail {
-      border: 1px solid var(--accent);
-      animation: blink-thumbnail 2.5s infinite;
-    }
+    @keyframes blink-thumbnail { 50% { background-color: rgba(34, 197, 94, 0.25); border-color: rgba(34, 197, 94, 0.8); } }
+    .carton-thumbnail.active-thumbnail { border: 1px solid var(--accent); animation: blink-thumbnail 2.5s infinite; }
     .carton-active-view .carton-label-large { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; }
     .carton-active-view .carton-label-large .carton-id { font-size: 1.5rem; }
     .carton-active-view .carton-label-large .carton-pieces { font-size: 1rem; font-variant-numeric: tabular-nums; }
     .carton-bag-container { display: flex; width: 100%; height: 100%; gap: 1px; }
     .carton-bag { flex: 1; position: relative; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--panel2); }
-
     .role-senior-dev{color:white;background-color:#3b82f6}
-
     .machine.minimized > .body > .meta,
     .machine.minimized > .body > .carton-progress-container,
-    .machine.minimized > .body > .machine-settings {
-      display: none;
-    }
-
+    .machine.minimized > .body > .machine-settings { display: none; }
     @keyframes blink-fire { 50% { opacity: 0.2; } }
     #chatNewMessageIcon.blinking { display: inline-block !important; animation: blink-fire 1s infinite; }
     #chatBody.collapsed { display: none; }
-
     .role-teamleiter{color:white;background-color:#ec4899}
     .role-einrichter{color:white;background-color:#f97316}
     .role-admin{color:white;background-color:#60a5fa}
@@ -105,17 +87,11 @@
     .user-info-popup-grid{display:grid;grid-template-columns:100px 1fr;gap:12px;align-items:center;}
     .user-info-popup img{width:100px;height:100px;border-radius:12px;object-fit:cover;}
     #urgent-notifications .alert{color:white; border-color:transparent;}
-    /* Chat stream */
     .alerts{display:flex;flex-wrap:wrap;gap:8px}
     .alert{display:flex;gap:8px;align-items:center;border:1px solid #2e3b53;border-radius:10px;padding:6px 10px;background:#0b1220}
     @keyframes blink-gradient { 50% { opacity: 0.3; } }
     .pruef-bar-finished { border-color: transparent !important; }
-    .blinking-gradient-final {
-        background: linear-gradient(90deg, #ef4444, transparent) !important;
-        animation: blink-gradient 2s infinite;
-    }
-    @keyframes blink-green { 50% { background-color: #22c55e80; } }
-    .blinking-green { background-color: #22c55e !important; animation: blink-green 2s infinite; }
+    .blinking-gradient-final { background: linear-gradient(90deg, #ef4444, transparent) !important; animation: blink-gradient 2s infinite; }
     .prufung-type-short { border: 1px solid var(--line) !important; }
     .prufung-type-long { border: 2px solid var(--text) !important; font-weight: bold; padding-left: 1rem !important; padding-right: 1rem !important; }
     .next-ready-checkbox:not(:checked) { filter: grayscale(1); }
@@ -138,7 +114,6 @@
               <span id="loginRole" class="role-badge" style="display: none;"></span>
             </div>
             <select id="loginSelect" class="btn"></select>
-
             <div class="user-info-popup">
             <div class="panel">
               <div class="body user-info-popup-grid">
@@ -286,7 +261,6 @@
         <button id="closeSwapModalBtn" class="btn ghost">✖</button>
       </div>
       <div id="swapMachineList" class="body grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
-        <!-- Machine buttons will be injected here -->
       </div>
     </div>
   </div>
@@ -360,16 +334,12 @@
             <strong class="period-val block font-bold">—</strong>
           </div>
         </div>
-
         <div class="carton-progress-container mt-4 flex gap-4 items-center justify-center">
           <div class="carton-active-view carton-box w-32 h-40">
-            <!-- Active carton content is generated by JS -->
           </div>
           <div class="carton-thumbnails grid grid-cols-2 gap-1.5">
-            <!-- Thumbnails are generated by JS -->
           </div>
         </div>
-
         <div class="pruef">
           <div class="pr-bar">
             <div class="pr-fill"></div><div class="pr-label">60:00</div>
@@ -382,7 +352,6 @@
             <div class="pr-reset">Reset</div>
           </div>
         </div>
-
         <div class="machine-settings hidden mt-4 space-y-2">
           <h4 class="font-bold border-b border-white/10 pb-1">Ustawienia</h4>
           <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm items-center">
@@ -401,68 +370,19 @@
           </div>
            <small class="text-xs opacity-60">Wciśnij ENTER (lub zmień pole), aby zapisać.</small>
         </div>
-
       </div>
     </article>
   </template>
-
   <script>
-    // --- basic state
-    const ORDERS_KEY='KN_ORDERS_V1';
-    const NOTES_KEY='KN007_NOTES';
-    const PLANS_KEY='KN007_PLANS';
     const SHARED_CFG_KEY = 'KN_SHARED_CFG_V1';
     const LOCAL_CFG_KEY = 'KN007_LOCAL_CFG_V1';
-    const ADMIN_PASS = 4753; // kod 0..1000 wymagany do publikacji SoG1917
-
-    const TRANSLATIONS = {
-      pl: {
-        appTitle: '🏭 Kartonowy Napełniacz', createUserTitle: 'Tworzenie nowego użytkownika',
-        placeholderLogin: 'Login (np. SoGxxxx lub LK12)', placeholderPassword: 'Hasło', placeholderName: 'Imię i nazwisko',
-        createUserBtn: 'Stwórz użytkownika', notesTitle: '💬 CHAT', placeholderNote: 'Wpisz wiadomość...', addNoteBtn: 'Wyślij',
-        plansTitle: '📌 Dalsze plany', placeholderPlan: 'Nowy pomysł / zadanie…', addPlanBtn: '+ Dodaj plan', refreshBtn: '↻ Odśwież z MySQL',
-        auftrag: 'Auftrag:', nextAuftrag: 'Następny Auftrag:', model: 'Model:', period: 'Okres:', pruefungTime: '🧪 Prüfung — czas:', customTime: 'WŁASNY',
-      },
-      en: {
-        appTitle: '🏭 Cardboard Filler', createUserTitle: 'Create new user',
-        placeholderLogin: 'Login (e.g. SoGxxxx or LK12)', placeholderPassword: 'Password', placeholderName: 'First and last name',
-        createUserBtn: 'Create User', notesTitle: '💬 CHAT', placeholderNote: 'Enter a message...', addNoteBtn: 'Send',
-        plansTitle: '📌 Future plans', placeholderPlan: 'New idea / task…', addPlanBtn: '+ Add plan', refreshBtn: '↻ Refresh from MySQL',
-        auftrag: 'Order:', nextAuftrag: 'Next Order:', model: 'Model:', period: 'Period:', pruefungTime: '🧪 Prüfung — time:', customTime: 'CUSTOM',
-      },
-      de: {
-        appTitle: '🏭 Karton-Füller', createUserTitle: 'Neuen Benutzer erstellen',
-        placeholderLogin: 'Login (z.B. SoGxxxx oder LK12)', placeholderPassword: 'Passwort', placeholderName: 'Vor- und Nachname',
-        createUserBtn: 'Benutzer erstellen', notesTitle: '💬 CHAT', placeholderNote: 'Nachricht eingeben…', addNoteBtn: 'Senden',
-        plansTitle: '📌 Weitere Pläne', placeholderPlan: 'Neue Idee / Aufgabe…', addPlanBtn: '+ Plan hinzufügen', refreshBtn: '↻ Von MySQL aktualisieren',
-        auftrag: 'Auftrag:', nextAuftrag: 'Nächster Auftrag:', model: 'Modell:', period: 'Zeitraum:', pruefungTime: '🧪 Prüfung — Zeit:', customTime: 'EIGENE',
-      },
-      tr: {
-        appTitle: '🏭 Karton Doldurucu', createUserTitle: 'Yeni kullanıcı oluştur',
-        placeholderLogin: 'Giriş (ör. SoGxxxx veya LK12)', placeholderPassword: 'Şifre', placeholderName: 'Ad ve soyad',
-        createUserBtn: 'Kullanıcı Oluştur', notesTitle: '💬 SOHBET', placeholderNote: 'Bir mesaj girin...', addNoteBtn: 'Gönder',
-        plansTitle: '📌 Gelecek planları', placeholderPlan: 'Yeni fikir / görev…', addPlanBtn: '+ Plan ekle', refreshBtn: '↻ MySQL\'den yenile',
-        auftrag: 'Sipariş:', nextAuftrag: 'Sonraki Sipariş:', model: 'Model:', period: 'Dönem:', pruefungTime: '🧪 Test — süre:', customTime: 'ÖZEL',
-      },
-      ar: {
-        appTitle: '🏭 حشو الكرتون', createUserTitle: 'إنشاء مستخدم جديد',
-        placeholderLogin: 'تسجيل الدخول (على سبيل المثال SoGxxxx أو LK12)', placeholderPassword: 'كلمة المرور', placeholderName: 'الاسم الأول والأخير',
-        createUserBtn: 'إنشاء مستخدم', notesTitle: '💬 دردشة', placeholderNote: 'أدخل رسالة…', addNoteBtn: 'إرسال',
-        plansTitle: '📌 خطط مستقبلية', placeholderPlan: 'فكرة / مهمة جديدة…', addPlanBtn: '+ إضافة خطة', refreshBtn: '↻ تحديث من MySQL',
-        auftrag: 'طلب:', nextAuftrag: 'الطلب التالي:', model: 'نموذج:', period: 'فترة:', pruefungTime: '🧪 فحص — الوقت:', customTime: 'مخصص',
-      }
-    };
-
+    const NOTES_KEY='KN007_NOTES';
+    const PLANS_KEY='KN007_PLANS';
+    const ADMIN_PASS = 4753;
     let USERS = {
       'SoG1917': { name: 'Kamil Kowalczyk', avatar: '', password: String(ADMIN_PASS) },
       'SoG2025': { name: 'John Locke', avatar: '' },
-      'SoG1':    { name: 'Michael Scott', avatar: '' },
-      'SoG1899': { name: 'James Corden', avatar: '' },
-      'SoP1':    { name: 'Piotr Nowak', avatar: '' },
-      'SoG2200': { name: 'User 2200', avatar: '' },
-      'SoG2020': { name: 'User 2020', avatar: '' },
     };
-
     const DEFAULTS={
       user: { uid: 'SoG1917' },
       users: USERS,
@@ -481,19 +401,14 @@
         'MA820054': { model: 'DASG-1 (201044)' }
       },
     };
-    let CFG = {}; // Global config object, to be populated asynchronously
-
+    let CFG = {};
     const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
     const isAdmin=()=> CFG.user?.uid==='SoG1917';
     let persistDebounceTimer;
     function persistLocalSettings() {
-        const localCfg = {
-            user: CFG.user,
-            theme: CFG.theme,
-        };
+        const localCfg = { user: CFG.user, theme: CFG.theme };
         localStorage.setItem(LOCAL_CFG_KEY, JSON.stringify(localCfg));
     }
-
     function persist(){
         clearTimeout(persistDebounceTimer);
         persistDebounceTimer = setTimeout(() => {
@@ -504,602 +419,220 @@
             saveShared(SHARED_CFG_KEY, sharedData);
         }, 1000);
     }
-    function setStatus(t){ $('#statusLine').textContent='Status: '+t; }
-
-    // --- kv storage via php
     async function saveShared(key,json){ try{ const res=await fetch('storage.php?a=set&key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(json)}); const j=await res.json(); return !!j.ok; }catch(e){ console.error(e); return false; } }
     async function loadShared(key){ try{ const res=await fetch('storage.php?a=get&key='+encodeURIComponent(key)); const j=await res.json(); return j.v?JSON.parse(j.v):null; }catch(e){ console.error(e); return null; } }
-
-    // --- machines (minimal for 0.007 look)
-    let activeTimeSetterCallback = null;
     class Pruefung{
       constructor(machine, root){
-        this.machine = machine;
-        this.root=root;
-        this.fill=$('.pr-fill',root);
-        this.label=$('.pr-label',root);
-        this.buttons=$$('.pr-buttons button',root);
-        this.reset=$('.pr-reset',root);
-        this.bar=$('.pr-bar', root);
-        this.customButton = this.buttons.find(b => b.dataset.time === 'custom');
-
-        this.total = this.machine.data.pruef || 3600;
-        this.start=Date.now();
-        this.prufungType = 'short';
-
-        this.bind();
-        this.updateCustomButtonBorder();
-        this.tick();
+        this.machine = machine; this.root=root; this.fill=$('.pr-fill',root); this.label=$('.pr-label',root); this.buttons=$$('.pr-buttons button',root); this.reset=$('.pr-reset',root); this.bar=$('.pr-bar', root); this.customButton = this.buttons.find(b => b.dataset.time === 'custom');
+        this.total = this.machine.data.pruef || 3600; this.start=Date.now(); this.prufungType = 'short';
+        this.bind(); this.updateCustomButtonBorder(); this.tick();
       }
-
-      updateCustomButtonBorder() {
-        this.customButton.classList.remove('prufung-type-short', 'prufung-type-long');
-        this.customButton.classList.add(this.prufungType === 'short' ? 'prufung-type-short' : 'prufung-type-long');
-      }
-
-      togglePrufungType() {
-        this.prufungType = this.prufungType === 'short' ? 'long' : 'short';
-        this.customButton.textContent = this.prufungType === 'short' ? 'Short' : 'Long 📏';
-        this.updateCustomButtonBorder();
-      }
-
+      updateCustomButtonBorder() { this.customButton.classList.remove('prufung-type-short', 'prufung-type-long'); this.customButton.classList.add(this.prufungType === 'short' ? 'prufung-type-short' : 'prufung-type-long'); }
+      togglePrufungType() { this.prufungType = this.prufungType === 'short' ? 'long' : 'short'; this.customButton.textContent = this.prufungType === 'short' ? 'Short' : 'Long 📏'; this.updateCustomButtonBorder(); }
       bind(){
         this.buttons.forEach(btn => {
             const v = btn.dataset.time;
-            if (v === 'custom') {
-                btn.textContent = 'Short';
-                btn.addEventListener('click', () => this.togglePrufungType());
-            } else {
-                btn.addEventListener('click', () => {
-                    this.buttons.forEach(b => b.classList.remove('primary'));
-                    btn.classList.add('primary');
-                    this.total = parseInt(v, 10);
-                    this.start = Date.now();
-                    this.machine.updatePruefTime(this.total);
-                    this.togglePrufungType();
-                });
-            }
+            if (v === 'custom') { btn.textContent = 'Short'; btn.addEventListener('click', () => this.togglePrufungType());
+            } else { btn.addEventListener('click', () => { this.buttons.forEach(b => b.classList.remove('primary')); btn.classList.add('primary'); this.total = parseInt(v, 10); this.start = Date.now(); this.machine.updatePruefTime(this.total); this.togglePrufungType(); }); }
         });
-
-        this.reset.addEventListener('click', () => {
-            this.start=Date.now();
-            this.buttons.forEach(b => b.classList.remove('primary'));
-            this.togglePrufungType();
-        });
-
-        this.bar.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            openCustomTimeModal((minutes) => this.setTime(minutes));
-        });
+        this.reset.addEventListener('click', () => { this.start=Date.now(); this.buttons.forEach(b => b.classList.remove('primary')); this.togglePrufungType(); });
+        this.bar.addEventListener('contextmenu', (e) => { e.preventDefault(); openCustomTimeModal((minutes) => this.setTime(minutes)); });
       }
-
-      setTime(minutes) {
-        this.total = Math.max(60, (parseInt(minutes, 10) || 0) * 60);
-        this.start = Date.now();
-        this.buttons.forEach(b => b.classList.remove('primary'));
-        this.machine.updatePruefTime(this.total);
-      }
-
+      setTime(minutes) { this.total = Math.max(60, (parseInt(minutes, 10) || 0) * 60); this.start = Date.now(); this.buttons.forEach(b => b.classList.remove('primary')); this.machine.updatePruefTime(this.total); }
       tick(){
-        const el = Math.min(this.total, Math.floor((Date.now()-this.start)/1000));
-        const left = this.total-el;
-        const pct = this.total > 0 ? (el / this.total) : 0;
-
+        const el = Math.min(this.total, Math.floor((Date.now()-this.start)/1000)); const left = this.total-el; const pct = this.total > 0 ? (el / this.total) : 0;
         this.fill.style.width = (pct * 100) + '%';
-
         if (left <= 0) {
-            if (!this.bar.classList.contains('pruef-bar-finished')) {
-                this.bar.classList.add('pruef-bar-finished');
-                this.fill.classList.add('blinking-gradient-final');
-                this.label.style.display = 'none';
-            }
+            if (!this.bar.classList.contains('pruef-bar-finished')) { this.bar.classList.add('pruef-bar-finished'); this.fill.classList.add('blinking-gradient-final'); this.label.style.display = 'none'; }
         } else {
-            if (this.bar.classList.contains('pruef-bar-finished')) {
-                this.bar.classList.remove('pruef-bar-finished');
-                this.fill.classList.remove('blinking-gradient-final');
-                this.label.style.display = 'flex';
-            }
-            const hue = 120 * (1 - pct);
-            this.fill.style.background = `linear-gradient(90deg, hsl(${hue}, 80%, 50%), hsl(${hue}, 80%, 65%))`;
+            if (this.bar.classList.contains('pruef-bar-finished')) { this.bar.classList.remove('pruef-bar-finished'); this.fill.classList.remove('blinking-gradient-final'); this.label.style.display = 'flex'; }
+            const hue = 120 * (1 - pct); this.fill.style.background = `linear-gradient(90deg, hsl(${hue}, 80%, 50%), hsl(${hue}, 80%, 65%))`;
         }
-
-        const mm = String(Math.floor(left/60)).padStart(2,'0'), ss = String(left%60).padStart(2,'0');
-        this.label.textContent = `${mm}:${ss}`;
-
+        const mm = String(Math.floor(left/60)).padStart(2,'0'), ss = String(left%60).padStart(2,'0'); this.label.textContent = `${mm}:${ss}`;
         requestAnimationFrame(()=>this.tick());
       }
     }
-
     class CartonProgress {
         constructor(container, machineData, orderData) {
-            this.container = container;
-            this.machineData = machineData;
-            this.isMA820059 = this.machineData.code === 'MA820059';
-
-            this.totalPieces = this.machineData.piecesPerCarton || 3000;
-            this.piecesPerBag = this.isMA820059 ? this.totalPieces : this.totalPieces;
-            this.numBags = this.isMA820059 ? 2 : 1;
-
-            const timePerCartonMs = (this.machineData.durationMin || 25) * 60 * 1000;
-            this.timePerPiece = timePerCartonMs / (this.piecesPerBag * this.numBags);
-
+            this.container = container; this.machineData = machineData; this.isMA820059 = this.machineData.code === 'MA820059';
+            this.totalPieces = this.machineData.piecesPerCarton || 3000; this.piecesPerBag = this.isMA820059 ? this.totalPieces : this.totalPieces; this.numBags = this.isMA820059 ? 2 : 1;
+            const timePerCartonMs = (this.machineData.durationMin || 25) * 60 * 1000; this.timePerPiece = timePerCartonMs / (this.piecesPerBag * this.numBags);
             if (!this.machineData.cartonState) {
-                this.machineData.cartonState = [
-                    { id: 1, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) },
-                    { id: 2, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) },
-                    { id: 3, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) },
-                    { id: 4, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) },
-                ];
+                this.machineData.cartonState = [ { id: 1, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) }, { id: 2, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) }, { id: 3, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) }, { id: 4, bags: Array(this.numBags).fill(null).map(()=>({pieces: 0})) }, ];
             }
             this.startNumber = this.machineData.cartonStartNumber || 1;
-
-            this.state = {
-                currentCartonId: this.machineData.currentCarton || 1,
-                startTime: this.machineData.cartonStartTime || Date.now(),
-                cartons: this.machineData.cartonState,
-            };
+            this.state = { currentCartonId: this.machineData.currentCarton || 1, startTime: this.machineData.cartonStartTime || Date.now(), cartons: this.machineData.cartonState, };
             this.machineData.cartonStartTime = this.state.startTime;
-
-
-            this.initDOM();
-            this.setCurrentCarton(this.state.currentCartonId, false);
-            this.tick();
+            this.initDOM(); this.setCurrentCarton(this.state.currentCartonId, false); this.tick();
         }
-
         initDOM() {
-            this.activeView = $('.carton-active-view', this.container);
-            this.thumbnailsContainer = $('.carton-thumbnails', this.container);
-            this.thumbnails = [];
-
+            this.activeView = $('.carton-active-view', this.container); this.thumbnailsContainer = $('.carton-thumbnails', this.container); this.thumbnails = [];
             this.thumbnailsContainer.innerHTML = '';
             for (let i = 1; i <= 4; i++) {
-                const thumb = document.createElement('div');
-                thumb.className = 'carton-box carton-thumbnail w-12 h-16';
-                thumb.dataset.cartonId = i;
-                const displayId = i + this.startNumber - 1;
-                thumb.innerHTML = `<div class="carton-fill"></div><div class="carton-label text-xs">#${displayId}</div>`;
-                this.thumbnailsContainer.appendChild(thumb);
-                this.thumbnails.push(thumb);
-                thumb.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    CartonContextMenuManager.open(this, i, e);
-                });
+                const thumb = document.createElement('div'); thumb.className = 'carton-box carton-thumbnail w-12 h-16'; thumb.dataset.cartonId = i;
+                const displayId = i + this.startNumber - 1; thumb.innerHTML = `<div class="carton-fill"></div><div class="carton-label text-xs">#${displayId}</div>`;
+                this.thumbnailsContainer.appendChild(thumb); this.thumbnails.push(thumb);
+                thumb.addEventListener('contextmenu', (e) => { e.preventDefault(); CartonContextMenuManager.open(this, i, e); });
             }
         }
-
         renderActiveView() {
-            const carton = this.state.cartons[this.state.currentCartonId - 1];
-            if (!carton) return;
-
-            this.activeView.innerHTML = '';
-
+            const carton = this.state.cartons[this.state.currentCartonId - 1]; if (!carton) return;
+            this.activeView.innerHTML = ''; const activeDisplayId = this.state.currentCartonId + this.startNumber - 1;
             if (this.isMA820059) {
-                const activeDisplayId = this.state.currentCartonId + this.startNumber - 1;
-                this.activeView.innerHTML = `
-                    <div class="carton-label-large"><span class="carton-id">#${activeDisplayId}</span></div>
-                    <div class="carton-bag-container">
-                        <div class="carton-bag"><div class="carton-fill"></div><div class="carton-label"></div></div>
-                        <div class="carton-bag"><div class="carton-fill"></div><div class="carton-label"></div></div>
-                    </div>`;
-
+                this.activeView.innerHTML = `<div class="carton-label-large"><span class="carton-id">#${activeDisplayId}</span></div><div class="carton-bag-container"><div class="carton-bag"><div class="carton-fill"></div><div class="carton-label"></div></div><div class="carton-bag"><div class="carton-fill"></div><div class="carton-label"></div></div></div>`;
                 const bagEls = $$('.carton-bag', this.activeView);
                 for(let i = 0; i < this.numBags; i++) {
-                    const bag = carton.bags[i] || {pieces: 0};
-                    const progress = Math.min(1, bag.pieces / this.piecesPerBag);
-                    $('.carton-fill', bagEls[i]).style.height = `${progress * 100}%`;
-                    $('.carton-label', bagEls[i]).textContent = `${bag.pieces}/${this.piecesPerBag}`;
+                    const bag = carton.bags[i] || {pieces: 0}; const progress = Math.min(1, bag.pieces / this.piecesPerBag);
+                    $('.carton-fill', bagEls[i]).style.height = `${progress * 100}%`; $('.carton-label', bagEls[i]).textContent = `${bag.pieces}/${this.piecesPerBag}`;
                 }
-
             } else {
-                const bag = carton.bags[0] || {pieces: 0};
-                const progress = Math.min(1, bag.pieces / this.piecesPerBag);
-                const activeDisplayId = this.state.currentCartonId + this.startNumber - 1;
-                this.activeView.innerHTML = `
-                    <div class="carton-fill" style="height: ${progress * 100}%"></div>
-                    <div class="carton-label-large">
-                        <span class="carton-id">#${activeDisplayId}</span>
-                        <span class="carton-pieces">${bag.pieces}/${this.piecesPerBag}</span>
-                    </div>`;
+                const bag = carton.bags[0] || {pieces: 0}; const progress = Math.min(1, bag.pieces / this.piecesPerBag);
+                this.activeView.innerHTML = `<div class="carton-fill" style="height: ${progress * 100}%"></div><div class="carton-label-large"><span class="carton-id">#${activeDisplayId}</span><span class="carton-pieces">${bag.pieces}/${this.piecesPerBag}</span></div>`;
             }
         }
-
         renderThumbnails() {
             this.thumbnails.forEach((thumb, index) => {
-                const carton = this.state.cartons[index];
-                if(!carton) return;
-                const totalPieces = carton.bags.reduce((sum, bag) => sum + bag.pieces, 0);
-                const totalCapacity = this.piecesPerBag * this.numBags;
+                const carton = this.state.cartons[index]; if(!carton) return;
+                const totalPieces = carton.bags.reduce((sum, bag) => sum + bag.pieces, 0); const totalCapacity = this.piecesPerBag * this.numBags;
                 const progress = Math.min(1, totalPieces / totalCapacity);
-
                 $('.carton-fill', thumb).style.height = `${progress * 100}%`;
-
                 thumb.classList.toggle('active-thumbnail', carton.id === this.state.currentCartonId);
             });
         }
-
         setCurrentCarton(cartonId, resetProgress = true) {
-            this.state.currentCartonId = cartonId;
-            this.machineData.currentCarton = cartonId;
-
+            this.state.currentCartonId = cartonId; this.machineData.currentCarton = cartonId;
             if (resetProgress) {
-                for (let i = cartonId - 1; i < this.state.cartons.length; i++) {
-                    if(this.state.cartons[i]) this.state.cartons[i].bags.forEach(b => b.pieces = 0);
-                }
+                for (let i = cartonId - 1; i < this.state.cartons.length; i++) { if(this.state.cartons[i]) this.state.cartons[i].bags.forEach(b => b.pieces = 0); }
                 const totalElapsedPieces = (this.state.currentCartonId - 1) * this.piecesPerBag * this.numBags;
-                this.state.startTime = Date.now() - (totalElapsedPieces * this.timePerPiece);
-                this.machineData.cartonStartTime = this.state.startTime;
+                this.state.startTime = Date.now() - (totalElapsedPieces * this.timePerPiece); this.machineData.cartonStartTime = this.state.startTime;
             }
             this.tick();
         }
-
         setPieces(num) {
-            const carton = this.state.cartons[this.state.currentCartonId - 1];
-            if (!carton) return;
-
+            const carton = this.state.cartons[this.state.currentCartonId - 1]; if (!carton) return;
             let currentBagIndex = 0;
             if(this.isMA820059) {
-                 const totalElapsedMs = Date.now() - this.state.startTime;
-                 const totalPiecesProduced = Math.floor(totalElapsedMs / this.timePerPiece);
-                 const piecesIntoCurrentCarton = totalPiecesProduced % (this.piecesPerBag * this.numBags);
-                 currentBagIndex = Math.floor(piecesIntoCurrentCarton / this.piecesPerBag);
+                 const totalElapsedMs = Date.now() - this.state.startTime; const totalPiecesProduced = Math.floor(totalElapsedMs / this.timePerPiece);
+                 const piecesIntoCurrentCarton = totalPiecesProduced % (this.piecesPerBag * this.numBags); currentBagIndex = Math.floor(piecesIntoCurrentCarton / this.piecesPerBag);
                  if(currentBagIndex > 1) currentBagIndex = 1;
             }
-            const bag = carton.bags[currentBagIndex];
-            if(!bag) return;
+            const bag = carton.bags[currentBagIndex]; if(!bag) return;
             bag.pieces = Math.max(0, Math.min(num, this.piecesPerBag));
-
             let totalElapsedPieces = (this.state.currentCartonId - 1) * this.piecesPerBag * this.numBags;
-            for(let i=0; i<currentBagIndex; i++) {
-                totalElapsedPieces += this.piecesPerBag;
-            }
+            for(let i=0; i<currentBagIndex; i++) { totalElapsedPieces += this.piecesPerBag; }
             totalElapsedPieces += bag.pieces;
-
-            this.state.startTime = Date.now() - (totalElapsedPieces * this.timePerPiece);
-            this.machineData.cartonStartTime = this.state.startTime;
-
-            this.tick();
-            persist();
+            this.state.startTime = Date.now() - (totalElapsedPieces * this.timePerPiece); this.machineData.cartonStartTime = this.state.startTime;
+            this.tick(); persist();
         }
-
-        setStartNumber(num) {
-            this.startNumber = num;
-            this.machineData.cartonStartNumber = num;
-            this.initDOM(); // Re-initialize to update labels
-            this.renderActiveView();
-            this.renderThumbnails();
-            persist();
-        }
-
+        setStartNumber(num) { this.startNumber = num; this.machineData.cartonStartNumber = num; this.initDOM(); this.renderActiveView(); this.renderThumbnails(); persist(); }
         tick() {
-            const totalElapsedMs = Date.now() - this.state.startTime;
-            const totalPiecesProduced = Math.floor(totalElapsedMs / this.timePerPiece);
-
-            const piecesPerCarton = this.piecesPerBag * this.numBags;
-            const completedCartons = Math.floor(totalPiecesProduced / piecesPerCarton);
-
+            const totalElapsedMs = Date.now() - this.state.startTime; const totalPiecesProduced = Math.floor(totalElapsedMs / this.timePerPiece);
+            const piecesPerCarton = this.piecesPerBag * this.numBags; const completedCartons = Math.floor(totalPiecesProduced / piecesPerCarton);
             const newCartonId = completedCartons + 1;
-
-            if (newCartonId > 4) {
-                 this.state.currentCartonId = 4;
-            } else {
-                this.state.currentCartonId = newCartonId;
-            }
+            if (newCartonId > 4) { this.state.currentCartonId = 4; } else { this.state.currentCartonId = newCartonId; }
             this.machineData.currentCarton = this.state.currentCartonId;
-
             for(let i = 0; i < 4; i++) {
-                const carton = this.state.cartons[i];
-                if (!carton) continue;
-                if (i < completedCartons) {
-                    carton.bags.forEach(b => b.pieces = this.piecesPerBag);
-                } else if (i > completedCartons) {
-                    carton.bags.forEach(b => b.pieces = 0);
-                }
+                const carton = this.state.cartons[i]; if (!carton) continue;
+                if (i < completedCartons) { carton.bags.forEach(b => b.pieces = this.piecesPerBag); } else if (i > completedCartons) { carton.bags.forEach(b => b.pieces = 0); }
             }
-
             const piecesIntoCurrentCarton = totalPiecesProduced % piecesPerCarton;
             const currentCarton = this.state.cartons[this.state.currentCartonId - 1];
-
             if(currentCarton) {
                 if (this.isMA820059) {
                     const currentBagIndex = Math.floor(piecesIntoCurrentCarton / this.piecesPerBag);
                     if(currentBagIndex < 2) {
                         if(currentCarton.bags[0]) currentCarton.bags[0].pieces = (currentBagIndex > 0) ? this.piecesPerBag : (piecesIntoCurrentCarton % this.piecesPerBag);
                         if(currentCarton.bags[1]) currentCarton.bags[1].pieces = (currentBagIndex > 0) ? (piecesIntoCurrentCarton % this.piecesPerBag) : 0;
-                    } else {
-                        currentCarton.bags.forEach(b => b.pieces = this.piecesPerBag);
-                    }
-                } else {
-                    if(currentCarton.bags[0]) currentCarton.bags[0].pieces = piecesIntoCurrentCarton;
-                }
+                    } else { currentCarton.bags.forEach(b => b.pieces = this.piecesPerBag); }
+                } else { if(currentCarton.bags[0]) currentCarton.bags[0].pieces = piecesIntoCurrentCarton; }
             }
-
-            this.renderActiveView();
-            this.renderThumbnails();
-
+            this.renderActiveView(); this.renderThumbnails();
             if(Date.now() % 20 === 0) persist();
-
             requestAnimationFrame(() => this.tick());
         }
     }
-
-    let activeMachineForColor = null;
-    let machineToSwap = null;
     class Machine{ constructor(container,data,orders){ this.root=$('#tpl-machine').content.firstElementChild.cloneNode(true);
-        this.data = data;
-        this.orders = orders;
-        this.code=data.code;
-        this.codeEl = $('.code',this.root);
-        this.codeEl.textContent = this.code;
-        this.codeEl.style.cursor = 'pointer';
-        this.codeEl.title = 'Kliknij, aby zamienić maszynę';
-        this.codeEl.addEventListener('click', () => {
-            openSwapModal(this);
-        });
-
+        this.data = data; this.orders = orders; this.code=data.code; this.codeEl = $('.code',this.root); this.codeEl.textContent = this.code; this.codeEl.style.cursor = 'pointer';
+        this.codeEl.title = 'Kliknij, aby zamienić maszynę'; this.codeEl.addEventListener('click', () => { openSwapModal(this); });
         const headEl = $('.head', this.root);
-        headEl.addEventListener('contextmenu', (e) => {
-            // Avoid opening on top of other context menus
-            if (e.target.closest('.model-color-dot, .machine-color-dot-large')) return;
-            ContextMenuManager.open(this, e);
-        });
-
-
-        if (!this.data.completionTimestamp) {
-          this.data.completionTimestamp = Date.now() + (Math.floor(Math.random() * 14940) + 60) * 1000;
-        }
-
-        this.dot = $('.model-color-dot', this.root);
-        this.dot.addEventListener('contextmenu', (e) => {
-            PickerManager.open(this, e);
-        });
-        // Also add to the large dot
-        $('.machine-color-dot-large', this.root).addEventListener('contextmenu', (e) => {
-            PickerManager.open(this, e);
-        });
-
+        headEl.addEventListener('contextmenu', (e) => { if (e.target.closest('.model-color-dot, .machine-color-dot-large')) return; ContextMenuManager.open(this, e); });
+        if (!this.data.completionTimestamp) { this.data.completionTimestamp = Date.now() + (Math.floor(Math.random() * 14940) + 60) * 1000; }
+        this.dot = $('.model-color-dot', this.root); this.dot.addEventListener('contextmenu', (e) => { PickerManager.open(this, e); });
+        $('.machine-color-dot-large', this.root).addEventListener('contextmenu', (e) => { PickerManager.open(this, e); });
         this.completionBadgeEl = $('.completion-badge', this.root);
-        this.completionBadgeEl.parentElement.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            openCustomTimeModal((minutes) => {
-                const newTimestamp = Date.now() + (minutes * 60 * 1000);
-                this.data.completionTimestamp = newTimestamp;
-                this.updateCompletionTime();
-                persist();
-            });
-        });
-
-        this.settingsToggle = $('.settings-toggle', this.root);
-        this.minimizeBtn = $('[data-action="minimize"]', this.root);
-        this.settingsPanel = $('.machine-settings', this.root);
-        this.settingsInputs = $$('.setting-input', this.settingsPanel);
-
+        this.completionBadgeEl.parentElement.addEventListener('contextmenu', (e) => { e.preventDefault(); openCustomTimeModal((minutes) => { const newTimestamp = Date.now() + (minutes * 60 * 1000); this.data.completionTimestamp = newTimestamp; this.updateCompletionTime(); persist(); }); });
+        this.settingsToggle = $('.settings-toggle', this.root); this.minimizeBtn = $('[data-action="minimize"]', this.root); this.settingsPanel = $('.machine-settings', this.root); this.settingsInputs = $$('.setting-input', this.settingsPanel);
         this.settingsToggle.addEventListener('click', () => this.settingsPanel.classList.toggle('hidden'));
-        this.minimizeBtn.addEventListener('click', () => {
-            this.data.minimized = !this.data.minimized;
-            this.render();
-            persist();
-        });
+        this.minimizeBtn.addEventListener('click', () => { this.data.minimized = !this.data.minimized; this.render(); persist(); });
         this.settingsInputs.forEach(input => {
             const eventType = input.type === 'checkbox' ? 'change' : 'keyup';
-            input.addEventListener(eventType, (e) => {
-                if (eventType === 'change' || e.key === 'Enter') {
-                    this.saveSetting(e.target);
-                }
-            });
+            input.addEventListener(eventType, (e) => { if (eventType === 'change' || e.key === 'Enter') { this.saveSetting(e.target); } });
         });
-
-        container.appendChild(this.root);
-        this.pr = new Pruefung(this, $('.pruef', this.root));
-        this.cartons = new CartonProgress($('.carton-progress', this.root), data, this.orders);
-
-        this.render();
-        this.updateCompletionTime(); // Initial call
-        this.completionInterval = setInterval(() => this.updateCompletionTime(), 60000); // Refresh every minute
+        container.appendChild(this.root); this.pr = new Pruefung(this, $('.pruef', this.root));
+        this.cartons = new CartonProgress($('.carton-progress-container', this.root), data, this.orders);
+        this.render(); this.updateCompletionTime(); this.completionInterval = setInterval(() => this.updateCompletionTime(), 60000);
     }
-      updatePruefTime(newTotalInSeconds) {
-        this.data.pruef = newTotalInSeconds;
-        persist();
-        setStatus('Zapisano nowy czas Prüfung dla ' + this.code);
-      }
+      updatePruefTime(newTotalInSeconds) { this.data.pruef = newTotalInSeconds; persist(); }
       saveSetting(input) {
-        const key = input.dataset.key;
-        const source = input.dataset.source;
-        let value;
-
-        if (input.type === 'checkbox') {
-            value = input.checked;
-        } else if (input.type === 'number') {
-            value = parseFloat(input.value) || 0;
-        } else {
-            value = input.value;
-        }
-
-        if (key === 'completionTimestamp' && typeof value === 'string' && value.includes('-')) {
-            value = new Date(value).getTime();
-            if (isNaN(value)) {
-                alert('Nieprawidłowy format daty!');
-                return;
-            }
-        }
-
-        if (source === 'machine') {
-            this.data[key] = value;
-        } else if (source === 'order') {
-            if (!this.orders[this.code]) this.orders[this.code] = genOrder();
-            this.orders[this.code][key] = value;
-        }
-
-        if (key === 'currentCarton') {
-            this.cartons.setCurrentCarton(parseInt(value, 10));
-        }
-
-        if (key === 'model' && String(value).includes('201044')) {
-            this.data.color = 'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png';
-        }
-
-        input.blur();
-        this.render();
-        persist();
-        setStatus('Zapisano ' + key);
+        const key = input.dataset.key; const source = input.dataset.source; let value;
+        if (input.type === 'checkbox') { value = input.checked; } else if (input.type === 'number') { value = parseFloat(input.value) || 0; } else { value = input.value; }
+        if (key === 'completionTimestamp' && typeof value === 'string' && value.includes('-')) { value = new Date(value).getTime(); if (isNaN(value)) { alert('Nieprawidłowy format daty!'); return; } }
+        if (source === 'machine') { this.data[key] = value; } else if (source === 'order') { if (!this.orders[this.code]) this.orders[this.code] = genOrder(); this.orders[this.code][key] = value; }
+        if (key === 'currentCarton') { this.cartons.setCurrentCarton(parseInt(value, 10)); }
+        if (key === 'model' && String(value).includes('201044')) { this.data.color = 'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png'; }
+        input.blur(); this.render(); persist();
       }
       render() {
-        this.root.classList.toggle('minimized', !!this.data.minimized);
-        this.minimizeBtn.textContent = this.data.minimized ? '➕' : '➖';
-
-        const order = this.orders[this.code] || {};
-        $('.auf-val',this.root).textContent = order.auftrag || '—';
-        $('.mdl-val',this.root).textContent = order.model || '—';
-        $('.period-val',this.root).textContent = order.period || '—';
-
-        const nextAufVal = order.next || '—';
-        const nextReadyCheck = order.nextReady ? ' <span class="text-green-400">✔️</span>' : '';
-        $('.nextauf-val',this.root).innerHTML = nextAufVal + nextReadyCheck;
-
-        const colorUrl = this.data.color || 'http://sannergmbh.beep.pl/v3/dasg/15-dasg-1-gray.png';
-        this.dot.src = colorUrl;
-        const largeDot = $('.machine-color-dot-large', this.root);
-        if (largeDot) largeDot.src = colorUrl;
-
+        this.root.classList.toggle('minimized', !!this.data.minimized); this.minimizeBtn.textContent = this.data.minimized ? '➕' : '➖';
+        const order = this.orders[this.code] || {}; $('.auf-val',this.root).textContent = order.auftrag || '—'; $('.mdl-val',this.root).textContent = order.model || '—'; $('.period-val',this.root).textContent = order.period || '—';
+        const nextAufVal = order.next || '—'; const nextReadyCheck = order.nextReady ? ' <span class="text-green-400">✔️</span>' : ''; $('.nextauf-val',this.root).innerHTML = nextAufVal + nextReadyCheck;
+        const colorUrl = this.data.color || 'http://sannergmbh.beep.pl/v3/dasg/15-dasg-1-gray.png'; this.dot.src = colorUrl;
+        const largeDot = $('.machine-color-dot-large', this.root); if (largeDot) largeDot.src = colorUrl;
         const isLightTheme = document.body.dataset.theme === 'light';
-        if (this.data.color && this.data.color.includes('white') && isLightTheme) {
-          this.dot.style.border = '1px solid #9ca3af';
-          if(largeDot) largeDot.style.border = '1px solid #9ca3af';
-        } else {
-          this.dot.style.border = 'none';
-          if(largeDot) largeDot.style.border = 'none';
-        }
-
-        // Populate settings inputs
+        if (this.data.color && this.data.color.includes('white') && isLightTheme) { this.dot.style.border = '1px solid #9ca3af'; if(largeDot) largeDot.style.border = '1px solid #9ca3af'; } else { this.dot.style.border = 'none'; if(largeDot) largeDot.style.border = 'none'; }
         this.settingsInputs.forEach(input => {
-            const key = input.dataset.key;
-            const source = input.dataset.source;
-            let value;
-            if (source === 'machine') {
-                value = this.data[key];
-            } else if (source === 'order') {
-                value = order[key];
-            }
-
-            if (input.type === 'checkbox') {
-                input.checked = !!value;
-            } else if (key === 'completionTimestamp' && value) {
-                input.value = new Date(value).toISOString().slice(0, 19).replace('T', ' ');
-            } else {
-                input.value = value || '';
-            }
+            const key = input.dataset.key; const source = input.dataset.source; let value;
+            if (source === 'machine') { value = this.data[key]; } else if (source === 'order') { value = order[key]; }
+            if (input.type === 'checkbox') { input.checked = !!value; } else if (key === 'completionTimestamp' && value) { input.value = new Date(value).toISOString().slice(0, 19).replace('T', ' '); } else { input.value = value || ''; }
         });
       }
-      setColor(color) {
-        this.data.color = color;
-        this.render();
-        persist();
-      }
+      setColor(color) { this.data.color = color; this.render(); persist(); }
       updateCompletionTime() {
-        const now = Date.now();
-        const timeLeft = Math.max(0, Math.floor((this.data.completionTimestamp - now) / 1000));
-        const hours = Math.floor(timeLeft / 3600);
-        const minutes = Math.floor((timeLeft % 3600) / 60);
+        const now = Date.now(); const timeLeft = Math.max(0, Math.floor((this.data.completionTimestamp - now) / 1000));
+        const hours = Math.floor(timeLeft / 3600); const minutes = Math.floor((timeLeft % 3600) / 60);
         this.completionBadgeEl.textContent = `${String(hours)}h ${String(minutes).padStart(2, '0')}m`;
-
-        // Color logic
-        const fifteenHours = 15 * 3600;
-        const eightHours = 8 * 3600;
-        const twoHours = 2 * 3600;
-
-        this.completionBadgeEl.className = 'completion-badge role-badge text-white'; // Reset classes
-
-        if (timeLeft <= 0) {
-            this.completionBadgeEl.classList.add('bg-yellow-400', 'text-black', 'font-bold');
-        } else if (timeLeft <= twoHours) {
-            this.completionBadgeEl.classList.add('bg-red-600');
-        } else if (timeLeft <= eightHours) {
-            this.completionBadgeEl.classList.add('bg-orange-500');
-        } else if (timeLeft <= fifteenHours) {
-            this.completionBadgeEl.classList.add('bg-yellow-500');
-        } else {
-            this.completionBadgeEl.classList.add('bg-gray-500');
-        }
-
-        // Urgent notification logic
-        if (timeLeft > 0 && timeLeft < twoHours) {
-            if (timeLeft < oneHour) {
-                showUrgentNotification(this.code, `Koniec Auftragu ${this.code} w ciągu godziny!`, 'danger');
-            } else {
-                showUrgentNotification(this.code, `Koniec Auftragu ${this.code} w ciągu 2 godzin!`, 'warning');
-            }
-        } else {
-            hideUrgentNotification(this.code);
-        }
+        const twoHours = 2 * 3600; this.completionBadgeEl.className = 'completion-badge role-badge text-white';
+        if (timeLeft <= 0) { this.completionBadgeEl.classList.add('bg-yellow-400', 'text-black', 'font-bold'); } else if (timeLeft <= twoHours) { this.completionBadgeEl.classList.add('bg-red-600'); } else if (timeLeft <= 8 * 3600) { this.completionBadgeEl.classList.add('bg-orange-500'); } else if (timeLeft <= 15 * 3600) { this.completionBadgeEl.classList.add('bg-yellow-500'); } else { this.completionBadgeEl.classList.add('bg-gray-500'); }
+        if (timeLeft > 0 && timeLeft < twoHours) { showUrgentNotification(this.code, `Koniec Auftragu ${this.code} w ciągu ${Math.ceil(timeLeft/3600)} godzin!`); } else { hideUrgentNotification(this.code); }
       }
     }
-
-    function genOrder(){ const rnd=String(Math.floor(Math.random()*10000)).padStart(4,'0'); const s=new Date(); const e=new Date(); e.setDate(s.getDate()+5);
-      const F=d=>`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`;
-      return { auftrag:'1012'+rnd, model:'DASG-1 (201044)', period:`od ${F(s)} do ${F(e)}`, next:'' };
-    }
-
     function renderMachines(){
-        const box=$('#machines');
-        box.innerHTML='';
+        const box=$('#machines'); box.innerHTML='';
         (CFG.machines||[]).forEach(m=> {
-            try {
-                new Machine(box,m, CFG.orders||{});
-            } catch (e) {
+            try { new Machine(box,m, CFG.orders||{}); } catch (e) {
                 console.error("Failed to render machine:", m.code, e);
-                const errorEl = document.createElement('div');
-                errorEl.className = 'panel machine';
+                const errorEl = document.createElement('div'); errorEl.className = 'panel machine';
                 errorEl.innerHTML = `<div class="head"><h2>Error loading machine: ${m.code}</h2></div><div class="body"><pre>${e.stack}</pre></div>`;
                 box.appendChild(errorEl);
             }
         });
     }
-
-    // --- stamps
-    function makeStamp(ts,user,smaller=false){
-      const d=new Date(ts);
-      const dd=String(d.getDate()).padStart(2,'0'), mm=String(d.getMonth()+1).padStart(2,'0'), yyyy=d.getFullYear();
-      const hh=String(d.getHours()).padStart(2,'0'), min=String(d.getMinutes()).padStart(2,'0');
-      const small=smaller?' small':'';
-      return `<span class="stamp">
-        <span class="chip small digits${small}">[${dd}/${mm}/${yyyy}]</span>
-        <span class="chip small digits${small}">[${hh}:${min}]</span>
-        <span class="chip small">${user.uid} (${user.name})</span>
-      </span>`;
-    }
-
-    // --- chat stream
-    function chatPush(text){ const el=document.createElement('div'); el.className='alert'; el.innerHTML=`<span>💬 ${text}</span> <button class="btn ghost">✖</button>`; $('.btn',el).onclick=()=>el.remove(); $('#chatStream').prepend(el); }
-
-    // --- notes / plans
-    let NOTES=[], PLANS=[];
-    let lastNoteCount = 0;
+    let NOTES=[], PLANS=[], lastNoteCount = 0;
     function renderNotes(){
       const list=$('#notesList'); list.innerHTML='';
       NOTES.forEach(n=>{
-        const row=document.createElement('div'); row.className='row';
-        const tag = n.status==='DRAFT' ? '<span class="tag draft">DRAFT</span>' : '';
-        row.innerHTML=`<div class="meta">${makeStamp(n.ts, {uid:n.user,name:n.userName})} ${tag}</div>
-                       <div class="txt">${n.text}</div>
-                       <div class="act"></div>`;
+        const row=document.createElement('div'); row.className='row'; const tag = n.status==='DRAFT' ? '<span class="tag draft">DRAFT</span>' : '';
+        row.innerHTML=`<div class="meta">${makeStamp(n.ts, {uid:n.user,name:n.userName})} ${tag}</div><div class="txt">${n.text}</div><div class="act"></div>`;
         const act=$('.act',row);
         if(isAdmin()){
-          const bE=document.createElement('button'); bE.className='btn'; bE.textContent='✏️'; bE.title='Edytuj';
-          const bR=document.createElement('button'); bR.className='btn'; bR.textContent='↩️'; bR.title='Odpowiedz';
-          const bD=document.createElement('button'); bD.className='btn'; bD.textContent='🗑️'; bD.title='Usuń';
+          const bE=document.createElement('button');bE.className='btn';bE.textContent='✏️';bE.title='Edytuj';
+          const bR=document.createElement('button');bR.className='btn';bR.textContent='↩️';bR.title='Odpowiedz';
+          const bD=document.createElement('button');bD.className='btn';bD.textContent='🗑️';bD.title='Usuń';
           bE.onclick=async()=>{ const v=prompt('Edytuj notatkę', n.text); if(v!=null){ n.text=v; await saveNotes(); renderNotes(); } };
-          bR.onclick=async()=>{ const v=prompt('Odpowiedź', ''); if(v){ NOTES.push({id:Date.now()+Math.random(), ts:Date.now(), user:CFG.user.uid, userName:CFG.user.name, text:`↪ ${v} (odpowiedź na #${n.id})`, status:'FINAL'}); await saveNotes(); renderNotes(); } };
+          bR.onclick=async()=>{ const v=prompt('Odpowiedź', ''); if(v){ NOTES.push({id:Date.now()+Math.random(),ts:Date.now(),user:CFG.user.uid,userName:CFG.user.name,text:`↪ ${v} (odpowiedź na #${n.id})`,status:'FINAL'}); await saveNotes(); renderNotes(); } };
           bD.onclick=async()=>{ if(confirm('Usunąć notatkę?')){ NOTES = NOTES.filter(x=>x.id!==n.id); await saveNotes(); renderNotes(); } };
           act.append(bE,bR,bD);
         }
-        list.appendChild(row);
-      });
-    }
-    function renderPlans(){
-      const list=$('#plansList'); list.innerHTML='';
-      PLANS.forEach(p=>{
-        const row=document.createElement('div'); row.className='row';
-        row.innerHTML=`<div class="meta">${makeStamp(p.ts, {uid:p.user,name:p.userName}, true)}</div>
-                       <div class="txt">${p.text}</div>`;
         list.appendChild(row);
       });
     }
@@ -1107,784 +640,55 @@
     async function loadNotes(){
         const db=await loadShared(NOTES_KEY);
         if(db){
-            if (lastNoteCount > 0 && db.length > lastNoteCount && $('#chatBody').classList.contains('collapsed')) {
-                $('#chatNewMessageIcon').classList.add('blinking');
-            }
-            NOTES=db;
-            lastNoteCount = db.length;
+            if (lastNoteCount > 0 && db.length > lastNoteCount && $('#chatBody').classList.contains('collapsed')) { $('#chatNewMessageIcon').classList.add('blinking'); }
+            NOTES=db; lastNoteCount = db.length;
         }
         renderNotes();
     }
     async function savePlans(){ await saveShared(PLANS_KEY, PLANS); }
     async function loadPlans(){ const db=await loadShared(PLANS_KEY); if(db){ PLANS=db; } renderPlans(); }
-
-    // --- login
-    function getUserRole(uid) {
-        if (!uid) return null;
-        const ROLES = {
-            'SoG1917': { name: 'Senior Developer', className: 'role-senior-dev' },
-            'SoG2025': { name: 'TeamLeiter', className: 'role-teamleiter' },
-            'SoG2200': { name: 'Einrichter', className: 'role-einrichter' },
-            'SoG2020': { name: 'Einrichter', className: 'role-einrichter' },
-        };
-        if (ROLES[uid]) return ROLES[uid];
-        if (uid.startsWith('SoG')) return { name: 'Administrator', className: 'role-admin' };
-        if (uid.startsWith('LK')) return { name: 'Leiharbeiter', className: 'role-leiharbeiter' };
-        if (uid.startsWith('SoP')) return { name: 'Administrator', className: 'role-admin' };
-        return { name: 'Użytkownik', className: 'role-user' };
-    }
-
-    function showUser(){
-      const uid = CFG.user?.uid;
-      const user = USERS[uid] || { name: 'Nieznany', avatar: '' };
-
-      $('#loginName').textContent = user.name;
-      $('#loginId').textContent = uid || '';
-      const avatarSrc = user.avatar || 'https://placehold.co/40/0e1117/ffffff?text=' + (user.name?.[0] || '?');
-      $('#userAvatar').src = avatarSrc;
-
-      const role = getUserRole(uid);
-      const roleEl = $('#loginRole');
-      if (role) {
-        roleEl.textContent = role.name;
-        roleEl.className = 'role-badge ' + role.className;
-        roleEl.style.display = 'inline-block';
-      } else {
-        roleEl.style.display = 'none';
-      }
-
-      // Update popup
-      $('#popupUserAvatar').src = user.avatar || 'https://placehold.co/184/0e1117/ffffff?text=' + (user.name?.[0] || '?');
-      $('#popupUserName').textContent = user.name;
-      $('#popupUserRole').textContent = role ? role.name : 'Użytkownik';
-    }
-
-    function showUserDetailsModal() {
-        const currentUser = USERS[CFG.user.uid];
-        if (currentUser) {
-            $('#detailsName').value = currentUser.name || '';
-            $('#detailsLang').value = CFG.language || 'pl';
-        }
-        $('#userDetailsModal').classList.remove('hidden');
-    }
-
-    function initUserDetailsModal() {
-        $('#userDetailsForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const user = USERS[CFG.user.uid];
-            if (user) {
-                user.name = $('#detailsName').value;
-                user.dob = $('#detailsDob').value; // Just store it as text
-                user.details_filled = true;
-
-                const selectedLang = $('#detailsLang').value;
-                setLanguage(selectedLang); // This also persists the language choice
-
-                CFG.users = USERS;
-                persist();
-
-                // Re-render user info in header and reload
-                showUser();
-                $('#userDetailsModal').classList.add('hidden');
-                window.location.reload();
-            }
-        });
-    }
-
-    function initLogin(){
-      const loginSelect = $('#loginSelect');
-
-      // Populate select
-      loginSelect.innerHTML = '<option value="new_user">+ Nowy użytkownik</option>';
-      for (const uid in USERS) {
-        const user = USERS[uid];
-        const option = document.createElement('option');
-        option.value = uid;
-        option.textContent = `${user.name} (${uid})`;
-        loginSelect.appendChild(option);
-      }
-
-      loginSelect.value = CFG.user.uid;
-      showUser();
-
-      // Check if we need to ask for details on initial load
-      const currentUser = USERS[CFG.user.uid];
-      if (currentUser && !currentUser.details_filled) {
-        showUserDetailsModal();
-      }
-
-      loginSelect.addEventListener('change', () => {
-        const selectedValue = loginSelect.value;
-        if (selectedValue === 'new_user') {
-          $('#newUserModal').classList.remove('hidden');
-          loginSelect.value = CFG.user.uid; // revert selection
-          return;
-        }
-
-        const userToLogin = USERS[selectedValue];
-        if (userToLogin && userToLogin.password) {
-          const pass = prompt(`Wprowadź hasło dla ${selectedValue}:`);
-          if (pass !== userToLogin.password) {
-            alert('Błędne hasło!');
-            loginSelect.value = CFG.user.uid; // revert
-            return;
-          }
-        }
-
-        logLogin(selectedValue);
-        CFG.user.uid = selectedValue;
-        persistLocalSettings(); // Save user change locally
-
-        const newCurrentUser = USERS[selectedValue];
-        if (newCurrentUser && !newCurrentUser.details_filled) {
-            showUser(); // update header immediately
-            showUserDetailsModal();
-        } else {
-            window.location.reload();
-        }
-      });
-
-      $('#userAvatar').addEventListener('click', () => {
-        const newAvatar = prompt('Podaj nowy URL avatara:', USERS[CFG.user.uid].avatar || '');
-        if (newAvatar !== null) {
-          USERS[CFG.user.uid].avatar = newAvatar;
-          CFG.users = USERS; // make sure the global change is stored
-          persist();
-          showUser();
-        }
-      });
-
-      $('#closeModalBtn').onclick = () => {
-        $('#newUserModal').classList.add('hidden');
-      };
-
-      $('#newUserForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const login = $('#newLogin').value;
-        const password = $('#newPassword').value;
-        const name = $('#newName').value;
-
-        if (!/^(SoG[0-9]{4}|LK[0-9]{2}|[0-9]{2}|[0-9]{4})$/.test(login)) {
-          alert('Format loginu jest nieprawidłowy. Użyj formatu SoGxxxx, LKxx, xx lub xxxx.');
-          return;
-        }
-
-        if (USERS[login]) {
-          alert('Użytkownik o takim loginie już istnieje.');
-          return;
-        }
-
-        USERS[login] = { name: name, avatar: '', password: password || undefined };
-        CFG.users = USERS;
-        logLogin(login);
-        CFG.user.uid = login;
-        persist();
-
-        $('#newUserModal').classList.add('hidden');
-        $('#newUserForm').reset();
-
-        showUser(); // update header immediately
-        showUserDetailsModal(); // Show details modal for new user
-      });
-    }
-
-    // --- init buttons
     function initNotesPlans(){
       const addNoteAction = async () => {
         const v=$('#noteInput').value.trim(); if(!v) return;
-        let status='FINAL';
-        if(isAdmin()){
-          const code=prompt('Podaj kod (0..1000) aby opublikować do „chat”. Błędny -> DRAFT:','');
-          const n = parseInt(code,10);
-          if(!(n>=0 && n<=1000) || n!==ADMIN_PASS){
-            status='DRAFT';
-          } else {
-            status='FINAL';
-            chatPush(v);
-          }
-        }
-        NOTES.push({id:Date.now()+Math.random(), ts:Date.now(), user:CFG.user.uid, userName:CFG.user.name, text:v, status});
+        NOTES.push({id:Date.now()+Math.random(), ts:Date.now(), user:CFG.user.uid, userName:CFG.user.name, text:v, status:'FINAL'});
         $('#noteInput').value=''; await saveNotes(); renderNotes();
-        $('#chatNewMessageIcon').classList.remove('blinking');
-        lastNoteCount = NOTES.length;
+        $('#chatNewMessageIcon').classList.remove('blinking'); lastNoteCount = NOTES.length;
       };
-
       $('#addNote').onclick = addNoteAction;
-      $('#noteInput').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-              e.preventDefault();
-              addNoteAction();
-          }
-      });
-
-      const chatHeader = $('#chatHeader');
-      const chatBody = $('#chatBody');
-      const chatIcon = $('#chatNewMessageIcon');
-
+      $('#noteInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNoteAction(); } });
+      const chatHeader = $('#chatHeader'); const chatBody = $('#chatBody'); const chatIcon = $('#chatNewMessageIcon');
       chatHeader.addEventListener('click', () => {
           chatBody.classList.toggle('collapsed');
-          if (!chatBody.classList.contains('collapsed')) {
-              chatIcon.classList.remove('blinking');
-              lastNoteCount = NOTES.length;
-              chatBody.classList.add('user-opened');
-          }
+          if (!chatBody.classList.contains('collapsed')) { chatIcon.classList.remove('blinking'); lastNoteCount = NOTES.length; chatBody.classList.add('user-opened'); }
       });
-
-      setTimeout(() => {
-          if(!chatBody.classList.contains('user-opened')) {
-             chatBody.classList.add('collapsed');
-          }
-      }, 5000);
-
-      $('#addPlan').onclick=async()=>{
-        const v=$('#planInput').value.trim(); if(!v) return;
-        PLANS.push({id:Date.now()+Math.random(), ts:Date.now(), user:CFG.user.uid, userName:CFG.user.name, text:v});
-        $('#planInput').value=''; await savePlans(); renderPlans();
-      };
-
-      loadNotes();
-      loadPlans();
-
-      setInterval(() => {
-        loadNotes();
-        loadPlans();
-        loadSharedConfig();
-      }, 30000);
+      setTimeout(() => { if(!chatBody.classList.contains('user-opened')) { chatBody.classList.add('collapsed'); } }, 5000);
+      $('#addPlan').onclick=async()=>{ const v=$('#planInput').value.trim(); if(!v) return; PLANS.push({id:Date.now()+Math.random(), ts:Date.now(), user:CFG.user.uid, userName:CFG.user.name, text:v}); $('#planInput').value=''; await savePlans(); renderPlans(); };
+      loadNotes(); loadPlans();
+      setInterval(() => { loadNotes(); loadPlans(); loadSharedConfig(); }, 30000);
     }
-
-    // --- machines render
-    function initMachines(){ const box=$('#machines'); box.innerHTML=''; (CFG.machines||[]).forEach(m=> new Machine(box,m, CFG.orders||{})); }
-
     function initThemeSwitcher() {
-      const themeButtons = $$('#themeSwitcher button');
-      const body = document.body;
-
-      function applyTheme(theme) {
-        body.dataset.theme = theme;
-        CFG.theme = theme;
-        persistLocalSettings();
-      }
-
-      // Apply saved theme on load
-      if (CFG.theme) {
-        body.dataset.theme = CFG.theme;
-      }
-
-      themeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const theme = button.dataset.theme;
-          applyTheme(theme);
-        });
-      });
+      const themeButtons = $$('#themeSwitcher button'); const body = document.body;
+      function applyTheme(theme) { body.dataset.theme = theme; CFG.theme = theme; persistLocalSettings(); }
+      if (CFG.theme) { body.dataset.theme = CFG.theme; }
+      themeButtons.forEach(button => { button.addEventListener('click', () => { applyTheme(button.dataset.theme); }); });
     }
-
-    function getTerminalId() {
-        let terminal = localStorage.getItem('KN007_TERMINAL');
-        if (!terminal) {
-            const terminalName = 'Terminal' + String(Math.floor(Math.random() * 900) + 100).padStart(3, '0');
-            const terminalKey = Math.random().toString(36).substring(2, 7); // e.g., 't12er'
-            terminal = `${terminalName} (${terminalKey})`;
-            localStorage.setItem('KN007_TERMINAL', terminal);
-        }
-        return terminal;
-    }
-
-    function logLogin(uid) {
-        const user = USERS[uid];
-        if (!user) return;
-
-        const history = JSON.parse(localStorage.getItem('KN007_LOGINS') || '[]');
-        const now = new Date();
-        const terminalId = getTerminalId();
-        const role = getUserRole(uid);
-
-        const logEntry = {
-            ts: now.toISOString(),
-            user: `${uid} (${user.name || 'N/A'})`,
-            terminal: terminalId,
-            accountType: role ? role.name : 'Użytkownik'
-        };
-
-        history.unshift(logEntry); // Add to the beginning
-        if (history.length > 100) { // Keep history to 100 entries
-            history.pop();
-        }
-        localStorage.setItem('KN007_LOGINS', JSON.stringify(history));
-    }
-
-    function renderLoginHistory() {
-        if (!isAdmin()) return;
-
-        const list = $('#loginHistoryList');
-        if (!list) return;
-
-        const history = JSON.parse(localStorage.getItem('KN007_LOGINS') || '[]');
-        if (history.length === 0) {
-            list.innerHTML = '<p class="opacity-70">Brak historii logowań.</p>';
-            return;
-        }
-
-        list.innerHTML = '';
-        history.forEach(entry => {
-            const d = new Date(entry.ts);
-            const date = d.toLocaleDateString('pl-PL');
-            const time = d.toLocaleTimeString('pl-PL');
-            const logHtml = `<div class="row !items-center"><div class="txt text-sm">Użytkownik <strong>${entry.user}</strong> zalogował się dnia ${date} o godz. ${time} z <strong>${entry.terminal}</strong> na konto <strong>${entry.accountType}</strong>.</div></div>`;
-            list.insertAdjacentHTML('beforeend', logHtml);
-        });
-    }
-
-    function renderAdminPanel() {
-      const footer = $('#adminFooter');
-      if (isAdmin()) {
-        footer.style.display = 'block';
-        renderLoginHistory();
-      } else {
-        footer.style.display = 'none';
-      }
-    }
-
-    function setLanguage(lang) {
-        if (!TRANSLATIONS[lang]) return;
-        document.documentElement.lang = lang;
-        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-        if (lang === 'ar') { document.body.style.fontSize = '17px'; }
-        else { document.body.style.fontSize = '15px'; }
-
-        $$('[data-translate-key]').forEach(el => {
-            const key = el.dataset.translateKey;
-            const translation = TRANSLATIONS[lang][key];
-            if (translation) {
-                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                    el.placeholder = translation;
-                } else {
-                    // Sanitize to prevent HTML injection if keys are ever dynamic
-                    const safeContent = document.createTextNode(translation);
-                    // Handle elements with children (like the title H1)
-                    const icon = el.querySelector('span');
-                    el.innerHTML = ''; // Clear existing content
-                    if(icon) el.appendChild(icon);
-                    el.appendChild(safeContent);
-                }
-            }
-        });
-        CFG.language = lang;
-        persist();
-
-        $$('#langSwitcher button').forEach(btn => {
-            btn.classList.toggle('primary', btn.dataset.lang === lang);
-        });
-    }
-
-    function initLangSwitcher() {
-        const langButtons = $$('#langSwitcher button');
-        langButtons.forEach(button => {
-            button.addEventListener('click', () => setLanguage(button.dataset.lang));
-        });
-        setLanguage(CFG.language || 'pl');
-    }
-
-    function openCustomTimeModal(callback) {
-        const modal = $('#customTimeModal');
-        activeTimeSetterCallback = callback;
-        modal.classList.remove('hidden');
-        $('#customTimeInput').focus();
-    }
-
+    function openCustomTimeModal(callback) { const modal = $('#customTimeModal'); activeTimeSetterCallback = callback; modal.classList.remove('hidden'); $('#customTimeInput').focus(); }
     function initCustomTimeModal() {
-        const modal = $('#customTimeModal');
-        const form = $('#customTimeForm');
-        const input = $('#customTimeInput');
-        const closeBtn = $('#closeTimeModalBtn');
-
-        const close = () => {
-            modal.classList.add('hidden');
-            input.value = '';
-            activeTimeSetterCallback = null;
-        }
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (activeTimeSetterCallback) {
-                activeTimeSetterCallback(input.value);
-            }
-            close();
-            return false; // Extra precaution
-        });
+        const modal = $('#customTimeModal'); const form = $('#customTimeForm'); const input = $('#customTimeInput'); const closeBtn = $('#closeTimeModalBtn');
+        const close = () => { modal.classList.add('hidden'); input.value = ''; activeTimeSetterCallback = null; }
+        form.addEventListener('submit', (e) => { e.preventDefault(); if (activeTimeSetterCallback) { activeTimeSetterCallback(input.value); } close(); return false; });
         closeBtn.onclick = close;
     }
-
-    const PickerManager = (() => {
-        const picker = $('#colorPicker');
-        const grid = picker ? $('.grid', picker) : null;
-        let activeMachine = null;
-
-        const COLOR_IMAGES = [
-            'http://sannergmbh.beep.pl/v3/dasg/01-dasg-1-white.png', 'http://sannergmbh.beep.pl/v3/dasg/02-dasg-1-red.png',
-            'http://sannergmbh.beep.pl/v3/dasg/03-dasg-1-green.png', 'http://sannergmbh.beep.pl/v3/dasg/04-dasg-1-blue.png',
-            'http://sannergmbh.beep.pl/v3/dasg/05-dasg-1-yellow.png', 'http://sannergmbh.beep.pl/v3/dasg/06-dasg-1-magenta.png',
-            'http://sannergmbh.beep.pl/v3/dasg/07-dasg-1-cyan.png', 'http://sannergmbh.beep.pl/v3/dasg/08-dasg-1-maroon.png',
-            'http://sannergmbh.beep.pl/v3/dasg/09-dasg-1-darkgreen.png', 'http://sannergmbh.beep.pl/v3/dasg/10-dasg-1-navy.png',
-            'http://sannergmbh.beep.pl/v3/dasg/11-dasg-1-olive.png', 'http://sannergmbh.beep.pl/v3/dasg/12-dasg-1-purple.png',
-            'http://sannergmbh.beep.pl/v3/dasg/13-dasg-1-teal.png', 'http://sannergmbh.beep.pl/v3/dasg/14-dasg-1-silver.png',
-            'http://sannergmbh.beep.pl/v3/dasg/15-dasg-1-gray.png', 'http://sannergmbh.beep.pl/v3/dasg/16-dasg-1-black.png',
-            'http://sannergmbh.beep.pl/v3/dasg/17-dasg-1-orange.png', 'http://sannergmbh.beep.pl/v3/dasg/18-dasg-1-lightblue.png',
-            'http://sannergmbh.beep.pl/v3/dasg/19-dasg-1-indigo.png', 'http://sannergmbh.beep.pl/v3/dasg/20-dasg-1-pink.png',
-            'http://sannergmbh.beep.pl/v3/dasg/21-dasg-1-darkgreen2.png', 'http://sannergmbh.beep.pl/v3/dasg/22-dasg-1-saddlebrown.png',
-            'http://sannergmbh.beep.pl/v3/dasg/23-dasg-1-gold.png', 'http://sannergmbh.beep.pl/v3/dasg/24-dasg-1-steelblue.png',
-            'http://sannergmbh.beep.pl/v3/dasg/25-dasg-1-mediumslateblue.png'
-        ];
-
-        const close = () => {
-            if (picker) picker.classList.add('hidden');
-            activeMachine = null;
-        };
-
-        const open = (machine, e) => {
-            e.preventDefault();
-            if (picker.classList.contains('hidden')) {
-              activeMachine = machine;
-              picker.style.left = e.pageX + 'px';
-              picker.style.top = e.pageY + 'px';
-              picker.classList.remove('hidden');
-            } else {
-              close();
-            }
-        };
-
-        const init = () => {
-            if (!picker || !grid) return;
-
-            grid.innerHTML = '';
-            COLOR_IMAGES.forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.className = 'w-7 h-8 rounded-md cursor-pointer hover:scale-125 transition-transform object-contain';
-                img.dataset.colorUrl = url;
-                grid.appendChild(img);
-
-                img.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    if (activeMachine) {
-                        activeMachine.setColor(img.dataset.colorUrl);
-                    }
-                    close();
-                });
-            });
-
-            document.addEventListener('click', (e) => {
-                if (activeMachine && picker && !picker.contains(e.target)) {
-                    close();
-                }
-            }, true); // Use capture phase to catch clicks outside
-        };
-
-        init();
-        return { open };
-    })();
-
-    // Clean up expired snoozes on load
-    try {
-        const snoozed = JSON.parse(localStorage.getItem('KN007_SNOOZED') || '{}');
-        const now = Date.now();
-        for (const id in snoozed) {
-            if (snoozed[id] < now) {
-                delete snoozed[id];
-            }
-        }
-        localStorage.setItem('KN007_SNOOZED', JSON.stringify(snoozed));
-    } catch(e) { console.error("Failed to clean snoozed notifications", e); }
-
-
-    const activeNotifications = {};
-    function showUrgentNotification(id, message, level) {
-        const snoozed = JSON.parse(localStorage.getItem('KN007_SNOOZED') || '{}');
-        if (snoozed[id] && snoozed[id] > Date.now()) {
-            return; // It's snoozed, do not show
-        }
-        if (activeNotifications[id]) return; // Already visible
-
-        const container = $('#urgent-notifications');
-        const newClass = level === 'danger' ? 'bg-red-800/90' : 'bg-orange-500/90';
-
-        const el = document.createElement('div');
-        el.id = `notification-${id}`;
-        el.className = `alert ${newClass} flex items-center justify-between w-full`;
-        el.innerHTML = `<div class="flex-grow cursor-pointer"><strong>PILNE:</strong> ${message}</div>
-                        <div class="flex items-center gap-2 pl-4 border-l border-white/30">
-                            <label for="next-ready-${id}" class="text-xs">Następny gotowy?</label>
-                            <input type="checkbox" id="next-ready-${id}" class="next-ready-checkbox h-5 w-5" data-machine-code="${id}">
-                        </div>`;
-
-        el.querySelector('.flex-grow').onclick = () => hideUrgentNotification(id);
-
-        const checkbox = el.querySelector('.next-ready-checkbox');
-        const order = CFG.orders[id] || {};
-        checkbox.checked = !!order.nextReady;
-        checkbox.addEventListener('change', (e) => {
-            const machineCode = e.target.dataset.machineCode;
-            const isChecked = e.target.checked;
-            if (!CFG.orders[machineCode]) CFG.orders[machineCode] = genOrder();
-            CFG.orders[machineCode].nextReady = isChecked;
-            persist();
-            setStatus(`Zapisano status gotowości dla ${machineCode}`);
-        });
-
-        container.appendChild(el);
-        activeNotifications[id] = el;
-    }
-    function hideUrgentNotification(id) {
-        if (activeNotifications[id]) {
-            activeNotifications[id].remove();
-            delete activeNotifications[id];
-        }
-        const snoozed = JSON.parse(localStorage.getItem('KN007_SNOOZED') || '{}');
-        snoozed[id] = Date.now() + 30 * 60 * 1000; // Snooze for 30 mins
-        localStorage.setItem('KN007_SNOOZED', JSON.stringify(snoozed));
-    }
-
-    function showCustomConfirm(message, callback) {
-        const modal = $('#customConfirmModal');
-        const msgEl = $('#customConfirmMessage');
-        const okBtn = $('#customConfirmOk');
-        const cancelBtn = $('#customConfirmCancel');
-
-        msgEl.textContent = message;
-        modal.classList.remove('hidden');
-
-        const newOkBtn = okBtn.cloneNode(true);
-        okBtn.parentNode.replaceChild(newOkBtn, okBtn);
-
-        const newCancelBtn = cancelBtn.cloneNode(true);
-        cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
-
-        const close = (result) => {
-            modal.classList.add('hidden');
-            callback(result);
-        };
-
-        newOkBtn.onclick = () => close(true);
-        newCancelBtn.onclick = () => close(false);
-    }
-
-    function swapMachine(newMachineData) {
-        if (!machineToSwap) return;
-        const indexToReplace = CFG.machines.findIndex(m => m.code === machineToSwap.code);
-        if (indexToReplace !== -1) {
-            CFG.machines[indexToReplace] = JSON.parse(JSON.stringify(DEFAULTS.machines.find(m => m.code === newMachineData.code)));
-            persist();
-            renderMachines();
-        }
-    }
-
-    function openSwapModal(machineInstance) {
-        const modal = $('#swapMachineModal');
-        const list = $('#swapMachineList');
-        machineToSwap = machineInstance;
-        list.innerHTML = '';
-
-        const displayedMachineCodes = CFG.machines.map(m => m.code);
-        const availableMachines = DEFAULTS.machines.filter(m => !displayedMachineCodes.includes(m.code));
-
-        if (availableMachines.length === 0) {
-            list.innerHTML = '<p class="col-span-full text-center opacity-70">Brak maszyn do zamiany.</p>';
-        } else {
-            availableMachines.forEach(machineData => {
-                const btn = document.createElement('button');
-                btn.className = 'btn';
-                btn.textContent = machineData.code;
-                btn.onclick = () => {
-                    swapMachine(machineData);
-                    $('#closeSwapModalBtn').click();
-                };
-                list.appendChild(btn);
-            });
-        }
-        modal.classList.remove('hidden');
-    }
-
-    function initSwapMachineModal() {
-        const modal = $('#swapMachineModal');
-        const closeBtn = $('#closeSwapModalBtn');
-        closeBtn.onclick = () => {
-            modal.classList.add('hidden');
-            machineToSwap = null;
-        };
-    }
-
-    const ContextMenuManager = (() => {
-        const menu = $('#machineContextMenu');
-        let activeMachine = null;
-
-        const close = () => {
-            if (menu) menu.classList.add('hidden');
-            activeMachine = null;
-        };
-
-        const open = (machine, e) => {
-            e.preventDefault();
-            activeMachine = machine;
-            menu.style.left = e.pageX + 'px';
-            menu.style.top = e.pageY + 'px';
-            menu.classList.remove('hidden');
-        };
-
-        const init = () => {
-            if (!menu) return;
-            $$('button', menu).forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const action = button.dataset.action;
-                    if (activeMachine && action) {
-                        switch(action) {
-                            case 'settings':
-                                activeMachine.settingsPanel.classList.toggle('hidden');
-                                break;
-                            case 'reset_carton':
-                                showCustomConfirm(`Zresetować postęp kartonów dla ${activeMachine.code}?`, (confirmed) => {
-                                    if (confirmed) {
-                                        activeMachine.cartons.setCurrentCarton(1, true);
-                                    }
-                                });
-                                break;
-                            case 'set_start_number':
-                                const newStart = prompt(`Wprowadź numer początkowy dla sekwencji kartonów:`, activeCartonManager.startNumber);
-                                if (newStart !== null && !isNaN(parseInt(newStart))) {
-                                    activeCartonManager.setStartNumber(parseInt(newStart));
-                                }
-                                break;
-                            case 'swap':
-                                openSwapModal(activeMachine);
-                                break;
-                        }
-                    }
-                    close();
-                });
-            });
-
-            document.addEventListener('click', (e) => {
-                if (activeMachine && !menu.contains(e.target)) {
-                    close();
-                }
-            }, true);
-        };
-
-        init();
-        return { open };
-    })();
-
-    const CartonContextMenuManager = (() => {
-        const menu = $('#cartonContextMenu');
-        let activeCartonManager = null;
-        let activeCartonId = null;
-
-        const close = () => {
-            if (menu) menu.classList.add('hidden');
-            activeCartonManager = null;
-            activeCartonId = null;
-        };
-
-        const open = (cartonManager, cartonId, e) => {
-            e.preventDefault();
-            activeCartonManager = cartonManager;
-            activeCartonId = cartonId;
-            menu.style.left = e.pageX + 'px';
-            menu.style.top = e.pageY + 'px';
-            menu.classList.remove('hidden');
-        };
-
-        const init = () => {
-            if (!menu) return;
-            $$('button', menu).forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const action = button.dataset.action;
-                    if (activeCartonManager && action) {
-                        switch(action) {
-                            case 'set_pieces':
-                                const currentPcs = activeCartonManager.state.currentPieces;
-                                const newPieces = prompt(`Wprowadź aktualną liczbę sztuk dla kartonu #${activeCartonId}:`, currentPcs);
-                                if (newPieces !== null && !isNaN(parseInt(newPieces))) {
-                                    activeCartonManager.setPieces(parseInt(newPieces));
-                                }
-                                break;
-                            case 'start_from':
-                                showCustomConfirm(`Rozpocząć produkcję od kartonu #${activeCartonId}?`, (confirmed) => {
-                                    if (confirmed) {
-                                        activeCartonManager.setCurrentCarton(activeCartonId, true);
-                                    }
-                                });
-                                break;
-                        }
-                    }
-                    close();
-                });
-            });
-
-            document.addEventListener('click', (e) => {
-                if (activeCartonManager && !menu.contains(e.target)) {
-                    close();
-                }
-            }, true);
-        };
-
-        init();
-        return { open };
-    })();
-
-    function initSettings() {
-        const settingsBtn = $('#settingsBtn');
-        const adminFooter = $('#adminFooter');
-        if (settingsBtn && adminFooter && isAdmin()) {
-            settingsBtn.addEventListener('click', () => {
-                const isHidden = adminFooter.style.display === 'none';
-                adminFooter.style.display = isHidden ? 'block' : 'none';
-            });
-        }
-    }
-
     async function main() {
         const sharedCfg = await loadShared(SHARED_CFG_KEY);
         const localCfg = JSON.parse(localStorage.getItem(LOCAL_CFG_KEY) || '{}');
-
-        if (sharedCfg) {
-            CFG = sharedCfg;
-        } else {
-            console.log('No shared config found in DB, using DEFAULTS.');
-            CFG = JSON.parse(JSON.stringify(DEFAULTS)); // Deep copy
-        }
-
-        // Restore local user-specific settings
-        CFG.user = localCfg.user || DEFAULTS.user;
-        CFG.theme = localCfg.theme || 'dark';
-
-        // Data integrity check - still useful for first run or corrupted DB data
-        if (!CFG.machines || !Array.isArray(CFG.machines) || CFG.machines.length < 8) {
-            console.log('Incomplete machine data detected. Restoring defaults.');
-            CFG.machines = DEFAULTS.machines;
-        }
-
-        // Set USERS from the loaded config, or defaults if not present
+        if (sharedCfg) { CFG = sharedCfg; } else { console.log('No shared config found in DB, using DEFAULTS.'); CFG = JSON.parse(JSON.stringify(DEFAULTS)); }
+        CFG.user = localCfg.user || DEFAULTS.user; CFG.theme = localCfg.theme || 'dark';
+        if (!CFG.machines || !Array.isArray(CFG.machines) || CFG.machines.length < 8) { console.log('Incomplete machine data detected. Restoring defaults.'); CFG.machines = DEFAULTS.machines; }
         if (CFG.users) { USERS = CFG.users; } else { CFG.users = USERS; }
-
-        // Start all initialization functions that depend on CFG
-        initThemeSwitcher();
-        initLangSwitcher();
-        initMachines();
-        initLogin();
-        initNotesPlans();
-        initUserDetailsModal();
-        renderAdminPanel();
-        initCustomTimeModal();
-        initSwapMachineModal();
-        initSettings();
-
-        // Initial save to establish DB state if it was empty
-        if (!sharedCfg) {
-            persist();
-        }
+        initThemeSwitcher(); initLangSwitcher(); initMachines(); initLogin(); initNotesPlans(); initUserDetailsModal(); renderAdminPanel(); initCustomTimeModal(); initSwapMachineModal(); initSettings();
+        if (!sharedCfg) { persist(); }
     }
-
     main();
   </script>
 </body>
