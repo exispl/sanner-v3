@@ -99,30 +99,7 @@
     <div class="panel">
       <div class="head">
         <div class="flex items-center gap-4">
-          <img src="https://www.sanner-group.com/typo3conf/ext/sanner_site/Resources/Public/Icons/Sanner-Icons/Sanner-Logo-Claim.svg" alt="Sanner Logo" class="h-10">
-          <div class="loginbar flex items-center gap-3 relative">
-            <img id="userAvatar" src="https://placehold.co/40" alt="Avatar" class="w-8 h-8 rounded-full cursor-pointer">
-            <div class="flex flex-col items-start">
-              <div>
-                <strong id="loginName">Kamil Kowalczyk</strong>
-                <small id="loginId" class="opacity-70">(SoG1917)</small>
-              </div>
-              <span id="loginRole" class="role-badge" style="display: none;"></span>
-            </div>
-            <select id="loginSelect" class="btn"></select>
-
-            <div class="user-info-popup">
-            <div class="panel">
-              <div class="body user-info-popup-grid">
-                <img id="popupUserAvatar" src="https://placehold.co/184" alt="User Avatar">
-                <div>
-                  <h3 id="popupUserName" class="font-bold text-lg">Imię Nazwisko</h3>
-                  <p id="popupUserRole" class="text-sm"></p>
-                  <p class="text-xs mt-2">Ostatnio zalogowany: <span id="popupLastLogin">teraz</span></p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <img src="https://www.sanner-group.com/typo3conf/ext/sanner_site/Resources/Public/Icons/Sanner-Icons/Sanner-Logo-Claim.svg" alt="Sanner Logo" class="h-12">
         </div>
         <div class="flex items-center gap-4">
             <div id="langSwitcher" class="flex gap-2">
@@ -142,7 +119,6 @@
         </div>
       </div>
       <div class="body">
-        <h1 class="m-0" data-translate-key="appTitle">🏭 Kartonowy Napełniacz</h1>
         <div id="statusLine" class="opacity-80 mt-1" data-translate-key="statusReady"></div>
         <div id="chatStream" class="alerts mt-2"></div>
       </div>
@@ -152,68 +128,7 @@
   <main class="wrap">
     <section id="machines" class="machines"></section>
 
-    <div id="newUserModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4">
-      <div class="panel w-full max-w-md">
-        <div class="head">
-          <h2 class="m-0" data-translate-key="createUserTitle">Tworzenie nowego użytkownika</h2>
-          <button id="closeModalBtn" class="btn ghost">✖</button>
-        </div>
-        <div class="body">
-          <form id="newUserForm" class="flex flex-col gap-4">
-            <input type="text" id="newLogin" name="login" class="btn" data-translate-key="placeholderLogin" placeholder="Login (np. SoGxxxx, LK12, 1234)" required pattern="^(SoG[0-9]{4}|LK[0-9]{2}|[0-9]{2}|[0-9]{4})$">
-            <input type="password" id="newPassword" name="password" class="btn" data-translate-key="placeholderPassword" placeholder="Hasło (opcjonalne)">
-            <input type="text" id="newName" name="name" class="btn" data-translate-key="placeholderName" placeholder="Imię i nazwisko" required>
-            <button type="submit" class="btn primary" data-translate-key="createUserBtn">Stwórz użytkownika</button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <section class="panel mt-3">
-      <div class="head"><h2 class="m-0" data-translate-key="notesTitle">💬 CHAT</h2></div>
-      <div class="body">
-        <div class="flex gap-2 flex-wrap">
-          <input id="noteInput" class="btn" style="flex:1" data-translate-key="placeholderNote" placeholder="Wpisz wiadomość...">
-          <button id="addNote" class="btn primary" data-translate-key="addNoteBtn">Wyślij</button>
-        </div>
-        <div id="notesList" class="notes-list mt-2"></div>
-      </div>
-    </section>
-
-    <section class="panel mt-3">
-      <div class="head"><h2 class="m-0" data-translate-key="plansTitle">📌 Dalsze plany</h2></div>
-      <div class="body">
-        <div class="flex gap-2 flex-wrap">
-          <input id="planInput" class="btn" style="flex:1" data-translate-key="placeholderPlan" placeholder="Nowy pomysł / zadanie…">
-          <button id="addPlan" class="btn" data-translate-key="addPlanBtn">+ Dodaj plan</button>
-        </div>
-        <div id="plansList" class="notes-list mt-2"></div>
-      </div>
-    </section>
   </main>
-
-  <div id="userDetailsModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-40">
-    <div class="panel w-full max-w-md">
-      <div class="head">
-        <h2 class="m-0">Uzupełnij swoje dane</h2>
-      </div>
-      <div class="body">
-        <form id="userDetailsForm" class="flex flex-col gap-4">
-          <p>To jest Twoje pierwsze logowanie. Prosimy o uzupełnienie danych. Pola są opcjonalne.</p>
-          <input type="text" id="detailsName" name="name" class="btn" placeholder="Imię i nazwisko">
-          <input type="text" id="detailsDob" name="dob" class="btn" placeholder="Data urodzenia (DD.MM.RRRR)">
-          <select id="detailsLang" name="lang" class="btn">
-            <option value="pl">Polski</option>
-            <option value="en">English</option>
-            <option value="tr">Türkçe</option>
-            <option value="de">Deutsch</option>
-            <option value="ar">العربية</option>
-          </select>
-          <button type="submit" class="btn primary">Zapisz i kontynuuj</button>
-        </form>
-      </div>
-    </div>
-  </div>
 
   <div id="colorPicker" class="hidden absolute panel p-2 z-20">
     <div class="grid grid-cols-4 gap-2">
@@ -271,21 +186,6 @@
     </div>
   </div>
 
-  <footer class="wrap" id="adminFooter" style="display: none;">
-    <div class="panel mt-3">
-      <div class="head">
-        <h2 class="m-0">🔧 Panel Admina</h2>
-      </div>
-      <div class="body">
-        <p>Tutaj znajdą się opcje administracyjne, takie jak zarządzanie użytkownikami i ich uprawnieniami.</p>
-        <div id="loginHistory" class="mt-4">
-            <h3 class="font-bold border-b border-white/10 pb-1">Historia logowań</h3>
-            <div id="loginHistoryList" class="notes-list mt-2 max-h-60 overflow-y-auto"></div>
-        </div>
-      </div>
-    </div>
-  </footer>
-
   <template id="tpl-machine">
     <article class="panel machine">
       <div class="head">
@@ -321,7 +221,7 @@
           </div>
         </div>
 
-        <div class="carton-progress grid grid-cols-2 grid-rows-2 gap-1.5 w-32 h-40 mx-auto mt-3">
+        <div class="carton-progress grid grid-cols-2 grid-rows-2 gap-1.5 w-40 h-48 mx-auto mt-3">
           <div class="carton-box" data-carton-id="1"><div class="carton-fill"></div><div class="carton-label">#1</div></div>
           <div class="carton-box" data-carton-id="3"><div class="carton-fill"></div><div class="carton-label">#3</div></div>
           <div class="carton-box" data-carton-id="2"><div class="carton-fill"></div><div class="carton-label">#2</div></div>
@@ -365,8 +265,6 @@
   <script>
     // --- basic state
     const ORDERS_KEY='KN_ORDERS_V1';
-    const NOTES_KEY='KN007_NOTES';
-    const PLANS_KEY='KN007_PLANS';
     const ADMIN_PASS = 4753; // kod 0..1000 wymagany do publikacji SoG1917
 
     const TRANSLATIONS = {
@@ -407,19 +305,7 @@
       }
     };
 
-    let USERS = {
-      'SoG1917': { name: 'Kamil Kowalczyk', avatar: '', password: String(ADMIN_PASS) },
-      'SoG2025': { name: 'John Locke', avatar: '' },
-      'SoG1':    { name: 'Michael Scott', avatar: '' },
-      'SoG1899': { name: 'James Corden', avatar: '' },
-      'SoP1':    { name: 'Piotr Nowak', avatar: '' },
-      'SoG2200': { name: 'User 2200', avatar: '' },
-      'SoG2020': { name: 'User 2020', avatar: '' },
-    };
-
     const DEFAULTS={
-      user: { uid: 'SoG1917' },
-      users: USERS,
       machines:[
         { code:'MA820061', durationMin:25, pruef:3600 },
         { code:'MA820062',  durationMin:22, pruef:3600 },
@@ -434,11 +320,9 @@
       },
     };
     let CFG=JSON.parse(localStorage.getItem('KN007_CFG')||'null')||DEFAULTS;
-    // ensure USERS is up to date
-    if (CFG.users) { USERS = CFG.users; } else { CFG.users = USERS; }
 
     const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const isAdmin=()=> CFG.user?.uid==='SoG1917';
+    const isAdmin=()=> false;
     function persist(){ localStorage.setItem('KN007_CFG', JSON.stringify(CFG)); }
     function setStatus(t){ $('#statusLine').textContent='Status: '+t; }
 
@@ -832,271 +716,10 @@
 
     function renderMachines(){ const box=$('#machines'); box.innerHTML=''; (CFG.machines||[]).forEach(m=> new Machine(box,m, CFG.orders||{})); }
 
-    // --- stamps
-    function makeStamp(ts,user,smaller=false){
-      const d=new Date(ts);
-      const dd=String(d.getDate()).padStart(2,'0'), mm=String(d.getMonth()+1).padStart(2,'0'), yyyy=d.getFullYear();
-      const hh=String(d.getHours()).padStart(2,'0'), min=String(d.getMinutes()).padStart(2,'0');
-      const small=smaller?' small':'';
-      return `<span class="stamp">
-        <span class="chip small digits${small}">[${dd}/${mm}/${yyyy}]</span>
-        <span class="chip small digits${small}">[${hh}:${min}]</span>
-        <span class="chip small">${user.uid} (${user.name})</span>
-      </span>`;
-    }
-
     // --- chat stream
     function chatPush(text){ const el=document.createElement('div'); el.className='alert'; el.innerHTML=`<span>💬 ${text}</span> <button class="btn ghost">✖</button>`; $('.btn',el).onclick=()=>el.remove(); $('#chatStream').prepend(el); }
 
-    // --- notes / plans
-    let NOTES=[], PLANS=[];
-    function renderNotes(){
-      const list=$('#notesList'); list.innerHTML='';
-      NOTES.forEach(n=>{
-        const row=document.createElement('div'); row.className='row';
-        const tag = n.status==='DRAFT' ? '<span class="tag draft">DRAFT</span>' : '';
-        row.innerHTML=`<div class="meta">${makeStamp(n.ts, {uid:n.user,name:n.userName})} ${tag}</div>
-                       <div class="txt">${n.text}</div>
-                       <div class="act"></div>`;
-        const act=$('.act',row);
-        if(isAdmin()){
-          const bE=document.createElement('button'); bE.className='btn'; bE.textContent='✏️'; bE.title='Edytuj';
-          const bR=document.createElement('button'); bR.className='btn'; bR.textContent='↩️'; bR.title='Odpowiedz';
-          const bD=document.createElement('button'); bD.className='btn'; bD.textContent='🗑️'; bD.title='Usuń';
-          bE.onclick=async()=>{ const v=prompt('Edytuj notatkę', n.text); if(v!=null){ n.text=v; await saveNotes(); renderNotes(); } };
-          bR.onclick=async()=>{ const v=prompt('Odpowiedź', ''); if(v){ NOTES.push({id:Date.now()+Math.random(), ts:Date.now(), user:CFG.user.uid, userName:CFG.user.name, text:`↪ ${v} (odpowiedź na #${n.id})`, status:'FINAL'}); await saveNotes(); renderNotes(); } };
-          bD.onclick=async()=>{ if(confirm('Usunąć notatkę?')){ NOTES = NOTES.filter(x=>x.id!==n.id); await saveNotes(); renderNotes(); } };
-          act.append(bE,bR,bD);
-        }
-        list.appendChild(row);
-      });
-    }
-    function renderPlans(){
-      const list=$('#plansList'); list.innerHTML='';
-      PLANS.forEach(p=>{
-        const row=document.createElement('div'); row.className='row';
-        row.innerHTML=`<div class="meta">${makeStamp(p.ts, {uid:p.user,name:p.userName}, true)}</div>
-                       <div class="txt">${p.text}</div>`;
-        list.appendChild(row);
-      });
-    }
-    async function saveNotes(){ await saveShared(NOTES_KEY, NOTES); }
-    async function loadNotes(){ const db=await loadShared(NOTES_KEY); if(db){ NOTES=db; } renderNotes(); }
-    async function savePlans(){ await saveShared(PLANS_KEY, PLANS); }
-    async function loadPlans(){ const db=await loadShared(PLANS_KEY); if(db){ PLANS=db; } renderPlans(); }
 
-    // --- login
-    function getUserRole(uid) {
-        if (!uid) return null;
-        const ROLES = {
-            'SoG1917': { name: 'Senior Developer', className: 'role-senior-dev' },
-            'SoG2025': { name: 'TeamLeiter', className: 'role-teamleiter' },
-            'SoG2200': { name: 'Einrichter', className: 'role-einrichter' },
-            'SoG2020': { name: 'Einrichter', className: 'role-einrichter' },
-        };
-        if (ROLES[uid]) return ROLES[uid];
-        if (uid.startsWith('SoG')) return { name: 'Administrator', className: 'role-admin' };
-        if (uid.startsWith('LK')) return { name: 'Leiharbeiter', className: 'role-leiharbeiter' };
-        if (uid.startsWith('SoP')) return { name: 'Administrator', className: 'role-admin' };
-        return { name: 'Użytkownik', className: 'role-user' };
-    }
-
-    function showUser(){
-      const uid = CFG.user?.uid;
-      const user = USERS[uid] || { name: 'Nieznany', avatar: '' };
-
-      $('#loginName').textContent = user.name;
-      $('#loginId').textContent = uid || '';
-      const avatarSrc = user.avatar || 'https://placehold.co/40/0e1117/ffffff?text=' + (user.name?.[0] || '?');
-      $('#userAvatar').src = avatarSrc;
-
-      const role = getUserRole(uid);
-      const roleEl = $('#loginRole');
-      if (role) {
-        roleEl.textContent = role.name;
-        roleEl.className = 'role-badge ' + role.className;
-        roleEl.style.display = 'inline-block';
-      } else {
-        roleEl.style.display = 'none';
-      }
-
-      // Update popup
-      $('#popupUserAvatar').src = user.avatar || 'https://placehold.co/184/0e1117/ffffff?text=' + (user.name?.[0] || '?');
-      $('#popupUserName').textContent = user.name;
-      $('#popupUserRole').textContent = role ? role.name : 'Użytkownik';
-    }
-
-    function showUserDetailsModal() {
-        const currentUser = USERS[CFG.user.uid];
-        if (currentUser) {
-            $('#detailsName').value = currentUser.name || '';
-            $('#detailsLang').value = CFG.language || 'pl';
-        }
-        $('#userDetailsModal').classList.remove('hidden');
-    }
-
-    function initUserDetailsModal() {
-        $('#userDetailsForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const user = USERS[CFG.user.uid];
-            if (user) {
-                user.name = $('#detailsName').value;
-                user.dob = $('#detailsDob').value; // Just store it as text
-                user.details_filled = true;
-
-                const selectedLang = $('#detailsLang').value;
-                setLanguage(selectedLang); // This also persists the language choice
-
-                CFG.users = USERS;
-                persist();
-
-                // Re-render user info in header and reload
-                showUser();
-                $('#userDetailsModal').classList.add('hidden');
-                window.location.reload();
-            }
-        });
-    }
-
-    function initLogin(){
-      const loginSelect = $('#loginSelect');
-
-      // Populate select
-      loginSelect.innerHTML = '<option value="new_user">+ Nowy użytkownik</option>';
-      for (const uid in USERS) {
-        const user = USERS[uid];
-        const option = document.createElement('option');
-        option.value = uid;
-        option.textContent = `${user.name} (${uid})`;
-        loginSelect.appendChild(option);
-      }
-
-      loginSelect.value = CFG.user.uid;
-      showUser();
-
-      // Check if we need to ask for details on initial load
-      const currentUser = USERS[CFG.user.uid];
-      if (currentUser && !currentUser.details_filled) {
-        showUserDetailsModal();
-      }
-
-      loginSelect.addEventListener('change', () => {
-        const selectedValue = loginSelect.value;
-        if (selectedValue === 'new_user') {
-          $('#newUserModal').classList.remove('hidden');
-          loginSelect.value = CFG.user.uid; // revert selection
-          return;
-        }
-
-        const userToLogin = USERS[selectedValue];
-        if (userToLogin && userToLogin.password) {
-          const pass = prompt(`Wprowadź hasło dla ${selectedValue}:`);
-          if (pass !== userToLogin.password) {
-            alert('Błędne hasło!');
-            loginSelect.value = CFG.user.uid; // revert
-            return;
-          }
-        }
-
-        logLogin(selectedValue);
-        CFG.user.uid = selectedValue;
-        persist();
-
-        const newCurrentUser = USERS[selectedValue];
-        if (newCurrentUser && !newCurrentUser.details_filled) {
-            showUser(); // update header immediately
-            showUserDetailsModal();
-        } else {
-            window.location.reload();
-        }
-      });
-
-      $('#userAvatar').addEventListener('click', () => {
-        const newAvatar = prompt('Podaj nowy URL avatara:', USERS[CFG.user.uid].avatar || '');
-        if (newAvatar !== null) {
-          USERS[CFG.user.uid].avatar = newAvatar;
-          CFG.users = USERS; // make sure the global change is stored
-          persist();
-          showUser();
-        }
-      });
-
-      $('#closeModalBtn').onclick = () => {
-        $('#newUserModal').classList.add('hidden');
-      };
-
-      $('#newUserForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const login = $('#newLogin').value;
-        const password = $('#newPassword').value;
-        const name = $('#newName').value;
-
-        if (!/^(SoG[0-9]{4}|LK[0-9]{2}|[0-9]{2}|[0-9]{4})$/.test(login)) {
-          alert('Format loginu jest nieprawidłowy. Użyj formatu SoGxxxx, LKxx, xx lub xxxx.');
-          return;
-        }
-
-        if (USERS[login]) {
-          alert('Użytkownik o takim loginie już istnieje.');
-          return;
-        }
-
-        USERS[login] = { name: name, avatar: '', password: password || undefined };
-        CFG.users = USERS;
-        logLogin(login);
-        CFG.user.uid = login;
-        persist();
-
-        $('#newUserModal').classList.add('hidden');
-        $('#newUserForm').reset();
-
-        showUser(); // update header immediately
-        showUserDetailsModal(); // Show details modal for new user
-      });
-    }
-
-    // --- init buttons
-    function initNotesPlans(){
-      const addNoteAction = async () => {
-        const v=$('#noteInput').value.trim(); if(!v) return;
-        let status='FINAL';
-        if(isAdmin()){
-          const code=prompt('Podaj kod (0..1000) aby opublikować do „chat”. Błędny -> DRAFT:','');
-          const n = parseInt(code,10);
-          if(!(n>=0 && n<=1000) || n!==ADMIN_PASS){
-            status='DRAFT';
-          } else {
-            status='FINAL';
-            chatPush(v);
-          }
-        }
-        NOTES.push({id:Date.now()+Math.random(), ts:Date.now(), user:CFG.user.uid, userName:CFG.user.name, text:v, status});
-        $('#noteInput').value=''; await saveNotes(); renderNotes();
-      };
-
-      $('#addNote').onclick = addNoteAction;
-      $('#noteInput').addEventListener('keyup', (e) => {
-          if (e.key === 'Enter') {
-              addNoteAction();
-          }
-      });
-
-      $('#addPlan').onclick=async()=>{
-        const v=$('#planInput').value.trim(); if(!v) return;
-        PLANS.push({id:Date.now()+Math.random(), ts:Date.now(), user:CFG.user.uid, userName:CFG.user.name, text:v});
-        $('#planInput').value=''; await savePlans(); renderPlans();
-      };
-
-      $('#refreshNP').onclick=async()=>{ await loadNotes(); await loadPlans(); };
-
-      loadNotes();
-      loadPlans();
-
-      setInterval(() => {
-        loadNotes();
-        loadPlans();
-      }, 30000);
-    }
 
     // --- machines render
     function initMachines(){ const box=$('#machines'); box.innerHTML=''; (CFG.machines||[]).forEach(m=> new Machine(box,m, CFG.orders||{})); }
@@ -1124,71 +747,6 @@
       });
     }
 
-    function getTerminalId() {
-        let terminal = localStorage.getItem('KN007_TERMINAL');
-        if (!terminal) {
-            const terminalName = 'Terminal' + String(Math.floor(Math.random() * 900) + 100).padStart(3, '0');
-            const terminalKey = Math.random().toString(36).substring(2, 7); // e.g., 't12er'
-            terminal = `${terminalName} (${terminalKey})`;
-            localStorage.setItem('KN007_TERMINAL', terminal);
-        }
-        return terminal;
-    }
-
-    function logLogin(uid) {
-        const user = USERS[uid];
-        if (!user) return;
-
-        const history = JSON.parse(localStorage.getItem('KN007_LOGINS') || '[]');
-        const now = new Date();
-        const terminalId = getTerminalId();
-        const role = getUserRole(uid);
-
-        const logEntry = {
-            ts: now.toISOString(),
-            user: `${uid} (${user.name || 'N/A'})`,
-            terminal: terminalId,
-            accountType: role ? role.name : 'Użytkownik'
-        };
-
-        history.unshift(logEntry); // Add to the beginning
-        if (history.length > 100) { // Keep history to 100 entries
-            history.pop();
-        }
-        localStorage.setItem('KN007_LOGINS', JSON.stringify(history));
-    }
-
-    function renderLoginHistory() {
-        if (!isAdmin()) return;
-
-        const list = $('#loginHistoryList');
-        if (!list) return;
-
-        const history = JSON.parse(localStorage.getItem('KN007_LOGINS') || '[]');
-        if (history.length === 0) {
-            list.innerHTML = '<p class="opacity-70">Brak historii logowań.</p>';
-            return;
-        }
-
-        list.innerHTML = '';
-        history.forEach(entry => {
-            const d = new Date(entry.ts);
-            const date = d.toLocaleDateString('pl-PL');
-            const time = d.toLocaleTimeString('pl-PL');
-            const logHtml = `<div class="row !items-center"><div class="txt text-sm">Użytkownik <strong>${entry.user}</strong> zalogował się dnia ${date} o godz. ${time} z <strong>${entry.terminal}</strong> na konto <strong>${entry.accountType}</strong>.</div></div>`;
-            list.insertAdjacentHTML('beforeend', logHtml);
-        });
-    }
-
-    function renderAdminPanel() {
-      const footer = $('#adminFooter');
-      if (isAdmin()) {
-        footer.style.display = 'block';
-        renderLoginHistory();
-      } else {
-        footer.style.display = 'none';
-      }
-    }
 
     function setLanguage(lang) {
         if (!TRANSLATIONS[lang]) return;
@@ -1373,14 +931,36 @@
         newCancelBtn.onclick = () => close(false);
     }
 
-    function swapMachine(newMachineData) {
-        if (!machineToSwap) return;
-        const indexToReplace = CFG.machines.findIndex(m => m.code === machineToSwap.code);
-        if (indexToReplace !== -1) {
-            CFG.machines[indexToReplace] = JSON.parse(JSON.stringify(DEFAULTS.machines.find(m => m.code === newMachineData.code)));
-            persist();
-            renderMachines();
+    function closeSwapModal() {
+        const modal = $('#swapMachineModal');
+        if (modal) {
+            modal.classList.add('hidden');
         }
+        machineToSwap = null; // Reset the state
+    }
+
+    function swapMachineAndClose(newMachineData) {
+        if (!machineToSwap) return;
+
+        const indexToReplace = CFG.machines.findIndex(m => m.code === machineToSwap.code);
+        if (indexToReplace === -1) {
+            console.error("Machine to swap not found in CFG:", machineToSwap.code);
+            closeSwapModal();
+            return;
+        }
+
+        const newMachineDefaultData = DEFAULTS.machines.find(m => m.code === newMachineData.code);
+        if (!newMachineDefaultData) {
+            console.error("New machine data not found in DEFAULTS:", newMachineData.code);
+            closeSwapModal();
+            return;
+        }
+
+        CFG.machines[indexToReplace] = JSON.parse(JSON.stringify(newMachineDefaultData));
+
+        persist();
+        renderMachines();
+        closeSwapModal();
     }
 
     function openSwapModal(machineInstance) {
@@ -1399,10 +979,7 @@
                 const btn = document.createElement('button');
                 btn.className = 'btn';
                 btn.textContent = machineData.code;
-                btn.onclick = () => {
-                    swapMachine(machineData);
-                    $('#closeSwapModalBtn').click();
-                };
+                btn.addEventListener('click', () => swapMachineAndClose(machineData));
                 list.appendChild(btn);
             });
         }
@@ -1410,15 +987,13 @@
     }
 
     function initSwapMachineModal() {
-        const modal = $('#swapMachineModal');
         const closeBtn = $('#closeSwapModalBtn');
-        closeBtn.onclick = () => {
-            modal.classList.add('hidden');
-            machineToSwap = null;
-        };
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeSwapModal);
+        }
     }
 
-    function init(){ initThemeSwitcher(); initLangSwitcher(); initMachines(); initLogin(); initNotesPlans(); initUserDetailsModal(); renderAdminPanel(); initCustomTimeModal(); initSwapMachineModal(); }
+    function init(){ initThemeSwitcher(); initLangSwitcher(); initMachines(); initCustomTimeModal(); initSwapMachineModal(); }
     init();
   </script>
 </body>
